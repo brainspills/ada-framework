@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+	<head>
+	
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+		<title><SERVER_NAME> Reference</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+		<style type="text/css">
+			.lowprofile {
+				color: #aaa;
+			}
+			.required {
+				color: #C67070;
+			}
+			.code_viewer {
+				margin: 0px; 
+				background: #333; 
+				color: #fff; 
+				font-size: 14px; 
+				font-family: "Courier New"; 
+				border: none; 
+				padding: 20px
+			}
+		</style>
+	
+	</head>
+	
+	<body>
+	
+		<div class="container">
+
+			<h1>
+				<SERVER_NAME> Reference
+			</h1>
+
+			<hr />
+
+			<div data-bind="visible: endpoints.length > 0">
+
+				<h2>
+					Authentication
+					<a class="lowprofile btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#auth_instructions">
+						<span class="glyphicon glyphicon-eye-open"></span>&nbsp;Show/Hide
+					</a>
+				</h2>
+
+				<div class="collapse in" id="auth_instructions">
+					<p>
+						<strong>ARK API uses JWT to authenticate users. To obtain a token, perform a request to the user login endpoint (<code>/v1/user/login</code>).</strong>
+					</p>
+
+<pre class="code_viewer">curl -i https://api.ark.do/v1/user/login
+     -X POST
+     -H 'Content-Type: application/json'
+     -d '{"email":"$EMAIL","password":"$PASSWORD"}'</pre>
+
+	     			<br />
+
+					<p>
+						<strong>You can now use the token from the previous request to add an Authorization header to subsequent calls to the API.</strong>
+					</p>
+
+<pre class="code_viewer">curl -i https://api.ark.do/$ENDPOINT_ROUTE
+     -X $METHOD
+     -H 'Authorization: bearer $TOKEN'
+     -H 'Content-Type: application/json'
+     -d '$JSON_PAYLOAD'</pre>
+
+				</div>
+
+				<hr />
+
+				<h2>Endpoints</h2>
+
+				<div class="input-group">
+			      	<div class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></div>
+			   		<input class="form-control input-lg" placeholder="Filter Endpoints..." data-bind="value: query, valueUpdate: 'input'" />
+			    </div>
+			
+				<br />
+				
+				<div data-bind="foreach: endpoints">
+					
+					<div class="panel" data-bind="
+						visible: $data.route.indexOf(query()) > -1,
+						css: {
+							'panel-info': $data.method == 'GET',
+							'panel-success': $data.method == 'POST',
+							'panel-warning': $data.method == 'PUT',
+							'panel-danger': $data.method == 'DELETE'
+						}
+					">
+						<div class="panel-heading">
+							<h3 class="panel-title">
+
+								<span class="label" data-bind="
+									text: method,
+									css: {
+										'label-info': $data.method == 'GET',
+										'label-success': $data.method == 'POST',
+										'label-warning': $data.method == 'PUT',
+										'label-danger': $data.method == 'DELETE'
+									}
+								"></span>
+
+								<strong><code data-bind="text: route"></code></strong>
+
+								<span class="pull-right" data-bind="foreach: $data.scope">
+									<span class="label label-default label-xs" data-bind="text: $data"></span>&nbsp;
+								</span>
+
+							</h3>
+						</div>
+						<div class="panel-body">
+							<p><strong data-bind="html: desc"></strong></p>
+							<div class="alert alert-info" data-bind="visible: public">
+								<small>
+									<span class="glyphicon glyphicon-info-sign"></span> No authentication needed.
+								</small>
+							</div>
+						</div>
+						<table class="table table-condensed" data-bind="if: $data.schema, visible: $data.method != 'DELETE'">
+							<thead>
+								<tr class="active">
+									<th style="width: 20%">Key</th>
+									<th>&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody data-bind="foreach: schema">
+								<tr data-bind="visible: !($parent.method != 'GET' && $parent.keys && $.inArray(key, $parent.keys) == -1) && !($parent.method == 'GET' && $data.meta.hidden)">
+									<td>
+										<span data-bind="if: $parent.method == 'POST'">
+											<span data-bind="if: $data.constraints && $data.constraints.presence">
+												<span class="required glyphicon glyphicon-check"></span>
+											</span>
+											<span data-bind="ifnot: $data.constraints && $data.constraints.presence">
+												<span class="lowprofile glyphicon glyphicon-unchecked"></span>
+											</span>
+										</span>
+										<span data-bind="if: $parent.method == 'PUT'">
+											<span class="lowprofile glyphicon glyphicon-unchecked"></span>
+										</span>
+										&nbsp;
+										<code data-bind="text: key"></code>
+									</td>
+									<td>
+										<small>
+											<strong data-bind="html: meta.label"></strong> - <span data-bind="html: meta.desc"></span>
+										</small>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				
+				</div>
+
+				<hr />
+
+			</div>
+
+			<p align="center" class="lowprofile">
+				<SERVER_NAME>
+			</p>
+
+		</div>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+		<script>
+			$(document).ready(function(){
+			    ko.applyBindings(function(){
+			    	this.query = ko.observable('');
+			    	this.endpoints = ['routes_data'];
+			    });   
+			});
+		</script>
+
+	</body>
+
+</html>

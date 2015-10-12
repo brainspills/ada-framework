@@ -29,37 +29,45 @@
 				var model_files = fs.readdirSync('./models');
 				
 				for(var i=0; i<model_files.length; i++) {
-					
-					var Model = require('./../models/'+model_files[i]);
-					var model = new Model();
 
-					var collection = model.collectionName;
-					var indeces = model.indeces;
-					
-					/*jshint -W051 */ 
-					delete Model;
-					delete model;
-					/*jshint +W051 */ 
+					var path = model_files[i];
+					var filename = path.replace(/^.*[\\\/]/, '');
+					var extension = filename.split('.').pop();
 
-					Mongo.db.collection(collection).dropIndexes();
+					if(extension == 'js') {
 					
-					if(!isEmpty(indeces)) {
-	
-						for(var indexName in indeces) {
-							console.log('Mongo: Creating index in ' + collection + ': ' + indexName);
-							indeces[indexName].options.name = indexName;
-							/*jshint -W083 */
-							Mongo.db.collection(collection).createIndex(indeces[indexName].fields, indeces[indexName].options, function(err, result) {
-								if(isEmpty(err)) {
-									console.log('Mongo: Index ' + result + ' created.');
-								}
-								else {
-									console.log('Mongo: Index creation error.');
-									console.log(err);
-								}
-								
-							});
-							/*jshint +W083 */
+						var Model = require('./../models/'+model_files[i]);
+						var model = new Model();
+
+						var collection = model.collectionName;
+						var indeces = model.indeces;
+						
+						/*jshint -W051 */ 
+						delete Model;
+						delete model;
+						/*jshint +W051 */ 
+
+						Mongo.db.collection(collection).dropIndexes();
+						
+						if(!isEmpty(indeces)) {
+		
+							for(var indexName in indeces) {
+								console.log('Mongo: Creating index in ' + collection + ': ' + indexName);
+								indeces[indexName].options.name = indexName;
+								/*jshint -W083 */
+								Mongo.db.collection(collection).createIndex(indeces[indexName].fields, indeces[indexName].options, function(err, result) {
+									if(isEmpty(err)) {
+										console.log('Mongo: Index ' + result + ' created.');
+									}
+									else {
+										console.log('Mongo: Index creation error.');
+										console.log(err);
+									}
+									
+								});
+								/*jshint +W083 */
+							}
+
 						}
 
 					}

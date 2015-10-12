@@ -3,7 +3,7 @@
  * Auto-generated on <timestamp>
  */
 
-var Controller = require('./../../../core/controller.js');
+var Controller = require('./../../core/controller.js');
 
 function <Name>(request, response) {
 

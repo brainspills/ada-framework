@@ -51,11 +51,17 @@ var routeFiles = fs.readdirSync('./http/routes');
 
 for(var i=0; i<routeFiles.length; i++) {
 	
-	var routeFile = require('./../http/routes/'+routeFiles[i]);
-	
-	for(j=0; j<routeFile.length; j++) {
-		routes.push(routeFile[j]);	
+	var path = routeFiles[i];
+	var filename = path.replace(/^.*[\\\/]/, '');
+	var extension = filename.split('.').pop();
+
+	if(extension == 'js') {
+		var routeFile = require('./../http/routes/'+routeFiles[i]);
+		for(j=0; j<routeFile.length; j++) {
+			routes.push(routeFile[j]);	
+		}
 	}
+	
 
 }
 

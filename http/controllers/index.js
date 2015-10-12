@@ -1,5 +1,5 @@
 // Require parent controller
-var Controller = require('./../../../core/controller.js');
+var Controller = require('./../../core/controller.js');
 
 // Define child controller
 function Index(request, response) {
@@ -53,8 +53,9 @@ function Index(request, response) {
 	self.reference = function () {
 
 		var fs = require('fs');
-		var body = fs.readFileSync('./tools/pages/reference-v1.html');
+		var body = fs.readFileSync('./tools/pages/reference.html');
 		body = body.toString().replace("['routes_data']", JSON.stringify(self.getRoutes()));
+		body = body.toString().replace(new RegExp('<SERVER_NAME>', 'g'), getConfig('server', 'name'));
 		
 		self.response.writeHead(200, {
 		  'Content-Type': 'text/html'
@@ -67,8 +68,9 @@ function Index(request, response) {
 	self.browser = function() {
 
 		var fs = require('fs');
-		var body = fs.readFileSync('./tools/pages/browser-v1.html');
+		var body = fs.readFileSync('./tools/pages/browser.html');
 		body = body.toString().replace("['routes_data']", JSON.stringify(self.getRoutes()));
+		body = body.toString().replace(new RegExp('<SERVER_NAME>', 'g'), getConfig('server', 'name'));
 		
 		self.response.writeHead(200, {
 		  'Content-Type': 'text/html'

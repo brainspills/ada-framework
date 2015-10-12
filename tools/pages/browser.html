@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+	<head>
+	
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+		<title><SERVER_NAME> Browser</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+		<style type="text/css">
+			.lowprofile {
+				color: #aaa;
+			}
+			.required {
+				color: #C67070;
+			}
+			.code_viewer {
+				margin: 0px; 
+				background: #333; 
+				color: #fff; 
+				font-size: 14px; 
+				font-family: "Courier New"; 
+				border: none; 
+				padding: 20px
+			}
+		</style>
+	
+	</head>
+	
+	<body>
+	
+		<div class="container">
+
+			<h1>
+				<SERVER_NAME> Browser
+			</h1>
+
+			<hr />
+
+			<div data-bind="visible: endpoints.length > 0">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4><span class="lowprofile glyphicon glyphicon-file"></span>&nbsp;Endpoint</h4>
+					</div>
+					<div class="panel-body">
+						<select class="form-control input-lg" data-bind="
+							options: endpoints,
+							optionsText: function(item) {
+								return item.desc;
+							},
+							value: endpoint
+						"></select>
+					</div>
+				</div>
+
+				<div class="panel" data-bind="
+					css: {
+						'panel-info': endpoint().method == 'GET',
+						'panel-success': endpoint().method == 'POST',
+						'panel-warning': endpoint().method == 'PUT' 
+					}
+				">
+					<div class="panel-heading">
+						<h4><span class="lowprofile glyphicon glyphicon-cog"></span>&nbsp;Parameters</h4>
+					</div>
+					<div class="panel-body">
+						
+						<div data-bind="visible: !endpoint().public">
+							<h5><span class="lowprofile glyphicon glyphicon-chevron-right"></span>&nbsp;Authorization</h5>
+							<hr />
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="access_token" class="col-sm-2 control-label">Access Token <span class="required">*</span></label>
+									<div class="col-sm-10">
+										<input id="access_token" class="form-control" placeholder="Access token" data-bind="value: token, valueUpdate: 'input'" />
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<div data-bind="visible: endpoint().url_template().length > 0">
+						<hr />
+						<h5><span class="lowprofile glyphicon glyphicon-chevron-right"></span>&nbsp;URL Template</h5>					
+						<hr />
+						<form class="form-horizontal" data-bind="foreach: endpoint().url_template">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">
+									<span data-bind="text: label"></span>
+									<span>
+										<span class="required">*</span>
+									</span>
+								</label>
+								<div class="col-sm-10">
+									<input class="form-control" data-bind="attr: {'placeholder': label}, value: value, valueUpdate: 'input'" />
+								</div>
+							</div>
+						</form>
+						</div>
+
+						<div data-bind="visible: endpoint().schema && (endpoint().method == 'POST' || endpoint().method == 'PUT')">
+							<hr />
+							<h5><span class="lowprofile glyphicon glyphicon-chevron-right"></span>&nbsp;Body Payload</h5>
+							<hr />
+						    <form class="form-horizontal" data-bind="foreach: endpoint().schema">
+								<div class="form-group">
+									<label class="col-sm-2 control-label" data-bind="attr: {'for':key}">
+										<span data-bind="text: meta.label"></span>
+										<span data-bind="visible: endpoint().method == 'POST' && $data.constraints && $data.constraints.presence">
+											<span class="required">*</span>
+										</span>
+									</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-bind="attr: {'id':key, 'placeholder': meta.desc}, value: value, valueUpdate: 'input'" />
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="panel" data-bind="
+					css: {
+						'panel-info': endpoint().method == 'GET',
+						'panel-success': endpoint().method == 'POST',
+						'panel-warning': endpoint().method == 'PUT',
+						'panel-danger': endpoint().method == 'DELETE' 
+					}
+				">
+					<div class="panel-heading">
+						<h4>
+							<span class="pull-right">
+								<a class="btn btn-xs" type="button" data-bind="
+									css: {
+										'btn-info': endpoint().method == 'GET',
+										'btn-success': endpoint().method == 'POST',
+										'btn-warning': endpoint().method == 'PUT',
+										'btn-danger': endpoint().method == 'DELETE' 
+									},
+									click: executeCurl
+								">
+									<span class="glyphicon glyphicon-flash"></span>&nbsp;Execute <span data-bind="text: endpoint().method"></span> Request
+								</a>
+							</span>
+							<span class="lowprofile glyphicon glyphicon-console"></span>&nbsp;cURL
+						</h4>
+					</div>
+					<div class="panel-body" style="padding: 0px; background: #333">
+						<p style="color: #ccc; padding: 5px 5px 0px 10px; margin: 0px;">
+							Request:
+						</p>
+						<pre data-bind="text: curl" class="code_viewer"></pre>
+						<p style="color: #ccc; padding: 5px 5px 0px 10px; margin: 0px;">
+							Response:
+						</p>
+						<pre data-bind="text: curlOutput" class="code_viewer"></pre>
+					</div>
+				</div>
+
+				<hr />
+
+			</div>
+
+			<p align="center" class="lowprofile">
+				<SERVER_NAME>
+			</p>
+
+		</div>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+		<script>
+			$(document).ready(function(){
+			   
+			    ko.applyBindings(function(){
+			    	
+			    	this.endpoints = ['routes_data'];
+			    	
+			    	this.endpoint = ko.observable({
+			    		"method":"GET",
+			    		"route":"",
+			    		"desc":"",
+			    		"schema":[],
+			    		"url_template": ko.observableArray([])
+			    	});
+
+			    	this.curlOutput = ko.observable('');
+			    	this.token = ko.observable('');
+
+			    	this.payload = ko.computed(function() {
+		
+			    		var payload = {};
+			    		
+			    		if(this.endpoint().method != 'GET' && this.endpoint().schema) {
+			    			
+			    			if(this.endpoint().keys) {
+
+			    				var temp = [];
+			    				for(var i=0; i<this.endpoint().schema.length; i++) {
+			    					if($.inArray(this.endpoint().schema[i].key, this.endpoint().keys) != -1) {
+			    						temp.push(this.endpoint().schema[i]);
+			    					}
+			    				}
+
+			    				this.endpoint().schema = temp;
+
+			    			}
+			    			
+		    				for(var i=0; i<this.endpoint().schema.length; i++) {
+				    			if(!this.endpoint().schema[i].value) {
+				    				this.endpoint().schema[i].value = ko.observable('');
+				    			}
+				    			payload[this.endpoint().schema[i].key] = this.endpoint().schema[i].value();
+				    		}
+			    		}
+			    		else {
+
+			    			this.endpoint().schema = [];
+			    		
+			    		}
+
+			    		return JSON.stringify(payload).replace(/\'/g, '\\\'');
+
+			    	}, this);
+
+			    	this.url = ko.computed(function() {
+
+			    		this.curlOutput('');
+
+			    		if(!this.endpoint().url_template) {
+		    				this.endpoint().url_template = ko.observableArray([]);
+		    			}
+			    		var route = this.endpoint().route;
+			    		var params = route.match(/:\w*/g);
+			    		
+			    		if(params) {
+			    			
+			    			if(params.length != this.endpoint().url_template().length) {
+			    				for(var i=0; i<params.length; i++) {
+				    				var template = {
+				    					'label' : params[i],
+				    					'value' : ko.observable('')
+				    				};
+				    				this.endpoint().url_template.push(template);
+				    			}
+			    			}
+
+			    			for(var i=0; i<params.length; i++) {
+
+			    				for(var j=0; j<this.endpoint().url_template().length; j++) {
+			    					if(params[i] == this.endpoint().url_template()[j].label) {
+			    						route = route.replace(params[i], this.endpoint().url_template()[j].value());
+			    					}
+			    				}
+			    			}
+			    			
+			    		}
+
+			    		return route;
+
+			    	});
+			    	
+			    	this.curl = ko.computed(function() {
+			    		
+			    		var command = "curl ";
+			    		
+			    		command += "-i "+location.protocol+"//"+location.host+this.url(); 
+			    		command += "\n\r     -X "+this.endpoint().method;
+			    		if(!self.endpoint().public) {
+			    			command += "\n\r     -H 'Authorization: bearer "+this.token()+"'";
+			    		}
+
+			    		if(this.endpoint().method == 'POST' || this.endpoint().method == 'PUT') {
+			    			command += "\n\r     -H 'Content-Type: application/json'";
+			    			command += "\n\r     -d '"+this.payload()+"'";
+			    		}
+			    		
+			    		return command;
+			    	
+			    	}, this);
+
+			    	this.executeCurl = function() {
+
+			    		var self = this;
+			    		
+			    		var ajx = {
+						    url: location.protocol+"//"+location.host+self.url(),
+						    contentType: 'application/json',
+						    type: self.endpoint().method,
+						    complete: function(result) {
+						    	self.curlOutput(JSON.stringify(result.responseJSON, null, '    '));
+						    }
+						};
+
+						if(self.endpoint().method != 'GET') {
+							ajx.data = self.payload()
+						}
+						if(!self.endpoint().public) {
+							ajx.headers = {'Authorization' : 'bearer '+this.token()};
+						}
+
+			    		$.ajax(ajx);
+
+			    	};	
+			    	
+			    });  
+
+			});
+		</script>
+
+	</body>
+
+</html>
