@@ -1,0 +1,65 @@
+/*
+ * @package	Ada Framework
+ * @module	HTTP/Base Document
+ */
+module.exports = function Document(request, response, model, embed) {
+
+	var self = this;
+
+	self.request = request;
+	self.response = response;
+
+	self.model = loadModel(model);
+	self.embed = embed;
+
+	self.model.id(self.request.params.id, function(document, err) {
+
+		if(isEmpty(err)) {
+
+			if(!isEmpty(self.embed)) {
+				
+				var embed_settings = self.model.embed[self.embed];
+				var embed = loadModel(embed_settings.model);
+				var page = isEmpty(self.request.params.page) ? 1 : self.request.params.page;
+				/*jshint -W061 */
+				eval('var query = {"'+embed_settings.key+'":"'+self.request.params.id+'"};');
+				/*jshint +W061 */
+
+				for(var index in self.request.params) {
+					if(index != 'page' && index != 'id') {
+						query[index] = self.request.params[index];
+					}
+				}
+
+				embed.find(page, query, function(collection, total, pagesize) {
+
+					var doc_hal = ada.services.hal.document(document, self.model);
+				   	var emb_hal = ada.services.hal.collection(collection, embed, page, total, pagesize, self.model.documentURI+'/'+self.request.params.id+'/');
+
+				   	var out = doc_hal;
+				   	out._links = emb_hal._links;
+				   	out.count = emb_hal.count;
+				   	out.total = emb_hal.total;
+				   	out._embedded = emb_hal._embedded;
+
+				   	self.response.send(out);
+				
+				});
+			
+			}
+			else {
+
+				self.response.send(ada.services.hal.document(document, self.model));
+
+			}
+
+		}
+		else {
+
+			self.response.send(err);
+
+		}
+
+	});
+
+};

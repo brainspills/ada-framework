@@ -1,0 +1,33 @@
+{
+  "name": "AdaAPI",
+  "version": "0.0.1",
+  "description": "The Ada REST API Framework",
+  "main": "index.js",
+  "repository" : { 
+    "type": "git",
+    "url": "https://github.com/brainspills/ada-framework.git"
+  },
+  "dependencies": {
+    "crypto-js": "*",
+    "dotenv": "*",
+    "jsonwebtoken": "*",
+    "moment": "*",
+    "mongodb": "~2.0",
+    "morgan": "*",
+    "prompt-sync": "*",
+    "restify": "3.x",
+    "validate.js": "*"
+  },
+  "devDependencies": {
+    "jshint": "*",
+    "node-find-files": "*",
+    "pluralize": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/jshint/bin/jshint .",
+    "todo": "node tools/todo",
+    "generate:controller": "node tools/generate controller",
+    "generate:model": "node tools/generate model",
+    "generate:resource": "node tools/generate resource"
+  }
+}
