@@ -1,5 +1,5 @@
 /*
- * @package	Ada Framework
+ * @package	Mongo
  * @module	Services/Mongo
  */
  var Mongo = {
@@ -38,7 +38,7 @@
 
 					if(extension == 'js') {
 					
-						var Model = require('./../models/'+model_files[i]);
+						var Model = require(process.env.PWD+'/models/'+model_files[i]);
 						var model = new Model();
 
 						var collection = model.collectionName;

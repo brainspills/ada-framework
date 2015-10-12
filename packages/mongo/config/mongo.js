@@ -1,5 +1,5 @@
 /*
- * @package	Ada Framework
+ * @package	Mongo
  * @module	Config/Mongo
  */
 module.exports = {
