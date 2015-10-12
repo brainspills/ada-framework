@@ -126,7 +126,7 @@ var Router = {
 			
 		});
 	
-	},
+	}, 
 
 	getRoutes : function() {
 
