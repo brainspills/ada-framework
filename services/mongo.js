@@ -27,6 +27,8 @@
 				// Build indeces
 				var fs = require('fs');
 				var model_files = fs.readdirSync('./models');
+
+				//TODO: Mongo Indexing: Load package models
 				
 				for(var i=0; i<model_files.length; i++) {
 

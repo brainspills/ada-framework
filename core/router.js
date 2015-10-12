@@ -2,12 +2,12 @@
  * @package	Ada Framework
  * @module	HTTP/Route Registry
  */
-module.exports = {
+var Router = {
 
 	register : function(server) 
 	{
 
-		var routes = require('./../http/routes.js');
+		var routes = Router.getRoutes();
 
 		for(var i=0; i<routes.length; i++) {
 			if(routes[i].meta.live) {
@@ -72,7 +72,27 @@ module.exports = {
 							Controller = require(__dirname+'/../core/controller.js');	
 						}
 						else {
-							Controller = require(__dirname+'/../http/controllers/' + route.binding.controller + '.js');	
+
+							var fs = require('fs');
+
+							if(fs.existsSync(__dirname+'/../http/controllers/' + route.binding.controller + '.js')) {
+								
+								Controller = require(__dirname+'/../http/controllers/' + route.binding.controller + '.js');	
+
+							}
+							else {
+
+								var packages = fs.readdirSync('./packages');
+								
+								for(i=0; i<packages.length; i++) {
+									var package = packages[i];
+									if(fs.existsSync('./packages/'+package+'/http/controllers/' + route.binding.controller + '.js')) {
+										Controller = require(__dirname+'/../packages/'+package+'/http/controllers/' + route.binding.controller + '.js');	
+									}
+								}
+								
+							}
+
 						}
 						
 						var controller = new Controller(request, response);
@@ -106,6 +126,63 @@ module.exports = {
 			
 		});
 	
+	},
+
+	getRoutes : function() {
+
+		var routes = [];
+
+		var fs = require('fs');
+		var routeFiles = fs.readdirSync('./http/routes');
+
+		for(var i=0; i<routeFiles.length; i++) {
+			
+			var path = routeFiles[i];
+			var filename = path.replace(/^.*[\\\/]/, '');
+			var extension = filename.split('.').pop();
+
+			if(extension == 'js') {
+				var routeFile = require('./../http/routes/'+routeFiles[i]);
+				for(j=0; j<routeFile.length; j++) {
+					routes.push(routeFile[j]);	
+				}
+			}
+			
+		}
+
+		var packages = fs.readdirSync('./packages');
+
+		for(i=0; i<packages.length; i++) {
+			
+			var package = packages[i];
+
+			if(fs.existsSync('./packages/'+package+'/http/routes')) {
+
+				var routeFiles = fs.readdirSync('./packages/'+package+'/http/routes');
+
+				for(var j=0; j<routeFiles.length; j++) {
+			
+					var path = routeFiles[j];
+					var filename = path.replace(/^.*[\\\/]/, '');
+					var extension = filename.split('.').pop();
+
+					if(extension == 'js') {
+						var routeFile = require('./../packages/'+package+'/http/routes/'+routeFiles[j]);
+						for(k=0; k<routeFile.length; k++) {
+							routes.push(routeFile[k]);	
+						}
+					}
+					
+				}
+			
+			}
+
+		}
+
+		return routes;
+
 	}
 
 };
+
+module.exports = Router;

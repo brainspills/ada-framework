@@ -10,7 +10,24 @@
 
 		global.loadModel = function(model) {
 
-			var Model = require(__dirname+'/../models/' + model + '.js');
+			var fs = require('fs');
+
+
+			if(fs.existsSync(__dirname+'/../models/' + model + '.js')) {								
+				Model = require(__dirname+'/../models/' + model + '.js');	
+			}
+			else {
+
+				var packages = fs.readdirSync('./packages');
+				
+				for(i=0; i<packages.length; i++) {
+					var package = packages[i];
+					if(fs.existsSync('./packages/'+package+'/http/models/' + model + '.js')) {
+						Model = require(__dirname+'/../packages/'+package+'/http/models/' + model + '.js');	
+					}
+				}
+				
+			}
 			return new Model();
 
 		};

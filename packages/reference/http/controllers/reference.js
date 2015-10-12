@@ -1,8 +1,8 @@
 // Require parent controller
-var Controller = require('./../../core/controller.js');
+var Controller = require('./../../../../core/controller.js');
 
 // Define child controller
-function Index(request, response) {
+function Reference(request, response) {
 
 	var self = this;
 
@@ -83,8 +83,8 @@ function Index(request, response) {
 }
 
 // Inherit parent controller
-Index.prototype = Object.create(Controller.prototype);
-Index.prototype.constructor = Controller;
+Reference.prototype = Object.create(Controller.prototype);
+Reference.prototype.constructor = Controller;
 
 // Package controller
-module.exports = Index;
+module.exports = Reference;
