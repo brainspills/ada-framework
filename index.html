@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ada Framework by brainspills</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Ada Framework</h1>
+      <h2 class="project-tagline">Node JS + Restify REST API Framework</h2>
+      <a href="https://github.com/brainspills/ada-framework" class="btn">View on GitHub</a>
+      <a href="https://github.com/brainspills/ada-framework/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/brainspills/ada-framework/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="ada-framework-documentation" class="anchor" href="#ada-framework-documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ada Framework Documentation</h1>
+
+<p><strong>Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.</strong></p>
+
+<p>Ada framework aims to minimize coding by providing flexible functionality through configuration and definition. A REST API is basically a provider of resources (abstracted as models) through client requests (determined through routes). The framework heavily depends on model and route definitions to complete a client request.</p>
+
+<p>For any request, the API returns any of the 3 basic types of responses: <code>collection</code>, <code>document</code>, and <code>controller</code>. <code>GET</code> requests are routed to either a collection or a document. <code>POST</code> and <code>PUT</code> requests which may require some additional logic are routed to controllers. The logic maybe defined within these controllers.</p>
+
+<p><em>The API has an auto generated reference through its base URL (<code>/</code>) and can be interacted with from an API browser at <code>/browser</code>.</em></p>
+
+<p><strong>Requirements</strong></p>
+
+<ul>
+<li>NodeJS</li>
+<li>MongoDB</li>
+</ul>
+
+<p><strong>Installation</strong></p>
+
+<p><strong><code>npm update</code></strong> to install framework dependencies. To start serving, issue a <code>node index.js</code> or <code>nodejs index.js</code> command. On startup, the application will prompt you to configure the server.</p>
+
+<h2>
+<a id="1-models" class="anchor" href="#1-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Models</h2>
+
+<p>Model definitions are located inside the <code>./models</code> directory and each model should extend the core model class (<code>./core/model.js</code>).</p>
+
+<h3>
+<a id="11-defining-models" class="anchor" href="#11-defining-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.1 Defining Models</h3>
+
+<pre><code>var Model = require('./../core/model.js');
+
+function &lt;Model Name&gt;() {
+
+  var self = this;
+  Model.call(this);
+
+  self.collectionName = "&lt;String, Required. Collection name in MongoDB&gt;";
+
+  self.collectionURI = "&lt;String, Required. URL segment to attach in HAL links for collections&gt;";
+  self.documentURI = "&lt;String, Required. URL segment to attach in HAL links for documents&gt;";
+
+  self.schema = [
+    {
+      "key": "&lt;String, Required. Field name in the collection&gt;",
+      "reference": "&lt;String, Optional. If the field is a reference to another collection, define the referenced collection here using its model name.&gt;",
+      "constraints": {
+        &lt;Object, Optional. Data validation definition. Refer to validate.js documentation.&gt;
+      },
+      "meta": {
+        "label": "&lt;String, Optional. Label of the field&gt;",
+        "desc": "&lt;String, Optional. Description of the field&gt;"
+      }
+    }
+    ...
+  ];
+
+  /* Optional */
+  self.embed = {
+    "&lt;Embed Name&gt;": {
+      "model": "&lt;String, Required. Model name of the embeddable collection&gt;",
+      "key": "&lt;String, Required. Local key referencing foreign collection ID&gt;"
+    }
+    ...
+  };
+
+  /* Optional */
+  self.indeces = {
+    &lt;Object, Optional. Indexing information of the collection. Refer to MongoDB documentation.&gt;
+  };
+
+}
+
+&lt;Model Name&gt;.prototype = Object.create(Model.prototype);
+&lt;Model Name&gt;prototype.constructor = Model;
+
+module.exports = &lt;Model Name&gt;;
+</code></pre>
+
+<h3>
+<a id="12-loading-models" class="anchor" href="#12-loading-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.2 Loading Models</h3>
+
+<p>The <code>loadModel()</code> helper will return an instance of the model.</p>
+
+<h3>
+<a id="13-model-methods" class="anchor" href="#13-model-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.3 Model Methods</h3>
+
+<ul>
+<li>
+<strong><code>all(page, callback)</code></strong> - List all documents in a page from a collection</li>
+<li>
+<strong><code>create(document, callback)</code></strong> - Create a single document in the collection</li>
+<li>
+<strong><code>delete(id, callback)</code></strong> - Remove a single document from the collection</li>
+<li>
+<strong><code>find(page, query, callback)</code></strong> - Query a collection in a page based on a query</li>
+<li>
+<strong><code>findOne(query, callback)</code></strong> - Query a collection based on a query, expect one document</li>
+<li>
+<strong><code>id(id, callback)</code></strong> - Retrieve a document from the collection by its id</li>
+<li>
+<strong><code>update(document, callback)</code></strong> - Update a single document by its id</li>
+</ul>
+
+<hr>
+
+<h2>
+<a id="2-routing" class="anchor" href="#2-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Routing</h2>
+
+<p>Route definitions are located inside the <code>./http/routes</code> directory.</p>
+
+<h3>
+<a id="21-defining-routes" class="anchor" href="#21-defining-routes" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Defining Routes</h3>
+
+<pre><code>module.exports = [
+  {
+    "route": "&lt;String, Required. Route URL. Refer to Restify documentation&gt;",
+    "method": "&lt;String, Required. HTTP method to use: "get", "post", "put", "delete"&gt;",
+
+    "response": {
+      "type": "&lt;String, Required. Type of response expected: "collection", "document", "controller"&gt;"
+    },
+
+    /* Optional */
+    "request": {
+      "insert": {
+         "&lt;Request parameter name&gt;": "&lt;String, Required. Type of value to be assigned: "auth.user.id"&gt;"
+         ...
+     } 
+    },
+
+    "binding": {
+      "model": "&lt;String, Optional. Model name of which this route is attached. Required when response type is "collection" or "document". Also required when "binding.keys" is present&gt;",
+      "controller": "&lt;String, Optional. Controller name of where the request is to be routed. Required when response type is "controller"&gt;",
+      "action": "&lt;String, Optional. Action name of where the request is to be routed. Required when response type is controller. No need to define action if this is set to "create" or "update"&gt;",
+      "embed": "&lt;String, Optional. Embed a related collection to the model retrieved. The reference is defined by the "embed" property of the model definition&gt;"
+      "keys": [
+        &lt;Array of Strings, Optional. List of keys that the route is expecting&gt;
+      ]
+    },
+
+    "meta": {
+      "desc": "&lt;String, Optional. Description of the route. Will not be included in reference and browser if not set&gt;",
+      "live": &lt;Boolean, Required. Activate or deactivate a route&gt;,
+      "noauth": &lt;Boolean, Required. When set to false, the route will not require the Authorization credentials. Defaults to true&gt;,
+      "scope": [
+        &lt;Array of Strings, Optional. List of scope names that can access this route. Scope will be determined from the authorization credential&gt;
+      ]
+    }
+  }
+  ...
+];
+</code></pre>
+
+<h3>
+<a id="22-collection-routing" class="anchor" href="#22-collection-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Collection Routing</h3>
+
+<p>To enable collection routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve documents (a collection) within the bound model.</p>
+
+<pre><code>{
+  'method': 'get',
+  'response': {
+    'type': 'collection'
+  },      
+  'binding': {
+    'model': '&lt;model name&gt;'
+  }
+}
+</code></pre>
+
+<h4>
+<a id="221-pagination" class="anchor" href="#221-pagination" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.1. Pagination</h4>
+
+<p>Setting a route's response type to <code>collection</code> will automatically enable it to be paged. To browse through pages within a collection, pass in a <code>page</code> query parameter in the request.</p>
+
+<pre><code>/&lt;route_name&gt;?page=&lt;page_number&gt;
+</code></pre>
+
+<h4>
+<a id="222-filters" class="anchor" href="#222-filters" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.2. Filters</h4>
+
+<p>Filters are automatically enabled for a route with the <code>collection</code> response type. To filter results from a collection, pass in a key-value pair of the keys you want to filter through the query parameter of the request.</p>
+
+<pre><code>/&lt;route_name&gt;?&lt;key1_in_collection&gt;=&lt;value&gt;&amp;&lt;key2_in_collection&gt;=&lt;value&gt;
+</code></pre>
+
+<p>The route can also be combined with the pager to browse through filtered collections.</p>
+
+<pre><code>/&lt;route_name&gt;?page=&lt;page_number&gt;&amp;&lt;key1_in_collection&gt;=&lt;value&gt;&amp;&lt;key2_in_collection&gt;=&lt;value&gt;
+</code></pre>
+
+<h3>
+<a id="23-document-routing" class="anchor" href="#23-document-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 Document Routing</h3>
+
+<p>To enable document routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve a document based on the provided ID (<code>:id</code>). The <code>:id</code> is a required segment of the route.</p>
+
+<pre><code>{
+  'route': '/&lt;route_name&gt;/:id',
+  'method': 'get',
+  'response': {
+    'type': 'document'
+  },      
+  'binding': {
+    'model': '&lt;model name&gt;'
+  }
+}
+</code></pre>
+
+<h4>
+<a id="231-embedding-related-collections" class="anchor" href="#231-embedding-related-collections" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3.1. Embedding Related Collections</h4>
+
+<p>To retrieve a document with an embedded related collection (one to many relation), set the following values in the route definition (along with the other properties). The value passed to the <code>binding.embed</code> key should match one of the embed keys defined in the parent model - defined in this route through <code>binding.model</code>.</p>
+
+<pre><code>{    
+  'binding': {
+    'model': '&lt;model name&gt;',
+    'embed': '&lt;embed name&gt;
+  }
+}
+</code></pre>
+
+<p>Since a collection is also returned through the route, pagination and filters are automatically enabled as well.</p>
+
+<pre><code>/&lt;route_name&gt;/&lt;document_id&gt;/&lt;embed_name&gt;?page=&lt;page_number&gt;&amp;&lt;key1_in_collection&gt;=&lt;value&gt;&amp;&lt;key2_in_collection&gt;=&lt;value&gt;
+</code></pre>
+
+<h3>
+<a id="24-controller-routing" class="anchor" href="#24-controller-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4 Controller Routing</h3>
+
+<p>To route a request to a controller, set the following values in the route definition (along with the other properties). The value in the <code>binding.controller</code> property will have <code>./http/controllers</code> as its base path.</p>
+
+<pre><code>{
+  'response': {
+    'type': 'controller',
+  },
+  'binding': {
+     'controller': '&lt;path/to/controller&gt;',
+     'action': '&lt;action name&gt;'
+  }
+}
+</code></pre>
+
+<h4>
+<a id="defining-controllers" class="anchor" href="#defining-controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defining Controllers</h4>
+
+<p>Controller definitions are located inside the <code>./http/controllers</code> directory and each controller should extend the core controller class (<code>./core/controller.js</code>).</p>
+
+<pre><code>var Controller = require('./../../../core/controller.js');
+
+function &lt;Controller Name&gt;(request, response) {
+
+    var self = this;
+
+    Controller.call(this, request, response); 
+
+    self.&lt;action name&gt; = function() {
+      /** Action definition **/
+    };
+
+    ...
+
+}
+
+&lt;Controller Name&gt;.prototype = Object.create(Controller.prototype);
+&lt;Controller Name&gt;.prototype.constructor = Controller;
+
+module.exports = &lt;Controller Name&gt;;
+</code></pre>
+
+<h4>
+<a id="241-create-action" class="anchor" href="#241-create-action" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4.1 Create Action</h4>
+
+<p>For routes that insert a document in a collection, a reserved action name of <code>create</code> is available for the controller routing. This will create a document in the bound model after it has been validated using the model's schema constraints. Set the following values in the route definition (along with the other properties) to enable the controller/create action.</p>
+
+<pre><code>{
+  'method': 'post',
+    'binding': {
+      'action': 'create',
+      'model': '&lt;model name&gt;' 
+    }
+  }
+}
+</code></pre>
+
+<h4>
+<a id="242-update-action" class="anchor" href="#242-update-action" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4.2 Update Action</h4>
+
+<p>For routes that edit a document in a collection, a reserved action name of <code>update</code> is available for the controller routing. This will update a document from the bound model after it has been validated using the model's schema constraints based on the provided ID (<code>:id</code>). Set the following values in the route definition (along with the other properties) to enable the controller/update action.The <code>:id</code> is a required segment of the route.</p>
+
+<pre><code>{
+  'route': '/&lt;route_name&gt;/:id', 
+  'method': 'put',
+  'binding': {
+    'action': 'update',
+    'model': '&lt;model name&gt;' 
+  }
+}
+</code></pre>
+
+<h4>
+<a id="243-delete-action" class="anchor" href="#243-delete-action" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4.3 Delete Action</h4>
+
+<p>For routes that remove a document from a collection, a reserved action name of <code>delete</code> is available for the controller routing. This will delete a document from the bound model based on the provided ID (<code>:id</code>) and will cascade to related collections as well. Set the following values in the route definition (along with the other properties) to enable the controller/delete action.The <code>:id</code> is a required segment of the route.</p>
+
+<pre><code>{
+  'route': '/&lt;route_name&gt;/:id', 
+  'method': 'delete',
+  'binding': {
+    'action': 'delete',
+    'model': '&lt;model name&gt;' 
+  }
+}
+</code></pre>
+
+<hr>
+
+<h2>
+<a id="3-generators" class="anchor" href="#3-generators" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Generators</h2>
+
+<h3>
+<a id="31-auto-generating-models" class="anchor" href="#31-auto-generating-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 Auto Generating Models</h3>
+
+<pre><code>npm run-script generate:model -- &lt;model name&gt; &lt;comma separated list of keys&gt;
+OR
+node tools/generate model &lt;model name&gt; &lt;comma separated list of keys&gt;
+</code></pre>
+
+<p>This tool will automatically generate a basic model definition based from the provided name and list of keys.</p>
+
+<h3>
+<a id="32-auto-generating-resources" class="anchor" href="#32-auto-generating-resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 Auto Generating Resources</h3>
+
+<pre><code>npm run-script generate:resource -- &lt;resource name&gt; &lt;comma separated list of keys&gt;
+OR
+node tools/generate resource &lt;resource name&gt; &lt;comma separated list of keys&gt;
+</code></pre>
+
+<p>This tool will automatically generate a basic model definition based from the provided name and list of keys along with the following associated routes:</p>
+
+<ul>
+<li>
+<strong><code>GET /&lt;resources&gt;</code></strong> - to retrieve the collection</li>
+<li>
+<strong><code>GET /&lt;resource&gt;/:id</code></strong> - to retrieve a document</li>
+<li>
+<strong><code>POST /&lt;resource&gt;</code></strong> - to create a document</li>
+<li>
+<strong><code>PUT /&lt;resource&gt;/:id</code></strong> - to update a document</li>
+<li>
+<strong><code>DELETE /&lt;resource&gt;/:id</code></strong> - to delete a document</li>
+</ul>
+
+<h3>
+<a id="33-auto-generating-controllers" class="anchor" href="#33-auto-generating-controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 Auto Generating Controllers</h3>
+
+<pre><code>npm run-script generate:controller -- &lt;controller name&gt; &lt;comma separated list of actions&gt;
+OR
+node tools/generate controller &lt;controller name&gt; &lt;comma separated list of actions&gt;
+</code></pre>
+
+<p>This tool will automatically generate a controller definition based from the provided name and list of actions.</p>
+
+<hr>
+
+<h2>
+<a id="4-helpers" class="anchor" href="#4-helpers" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Helpers</h2>
+
+<ul>
+<li>
+<strong><code>getConfig(namespace, key)</code></strong> - Returns a configuration value</li>
+<li>
+<strong><code>hash(string)</code></strong> - Returns a hashed form of a string. A key for hashing is set from <code>.env</code> using the <code>SERVER_KEY</code> key</li>
+<li>
+<strong><code>isEmpty(object)</code></strong> - Tests the "emptiness" of a value. Returns <code>true</code> if the value is any of the following: <code>undefined</code>, <code>null</code>, <code>false</code>, <code>0</code>, zero length string or array, objects with no properties </li>
+<li>
+<strong><code>loadModel(model)</code></strong> - Returns a new instance of a model</li>
+</ul>
+
+<hr>
+
+<h2>
+<a id="5-under-development--known-issues" class="anchor" href="#5-under-development--known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. Under Development / Known Issues</h2>
+
+<ul>
+<li>Standardization of success responses for route methods other than GET</li>
+<li>Standardization of error responses for unique validation fails</li>
+<li>Ensure data types for document create/update based on schema definition</li>
+<li>Validation for presence of related collection on document create/update</li>
+<li>Validation for document update</li>
+<li>Cascade of delete</li>
+<li>Implement scopes</li>
+</ul>
+
+<p>A list of things to do can be collected using the <code>todo</code> tool.</p>
+
+<pre><code>npm run-script todo
+OR 
+node tools/todo
+</code></pre>
+
+<p>Annotate the file line with a <code>//TODO: &lt;description&gt;</code> for it to display in the results.</p>
+
+<hr>
+
+<h2>
+<a id="6-improvements" class="anchor" href="#6-improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>6. Improvements</h2>
+
+<p>A list of stuff that may be needed to improve the framework</p>
+
+<ul>
+<li>Database abstraction</li>
+<li>Model, route, and controller modifier tool</li>
+<li>Authentication module creator tool (which means expansions maybe enabled through a module loader service a.k.a. <em>packaging</em>)</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/brainspills/ada-framework">Ada Framework</a> is maintained by <a href="https://github.com/brainspills">brainspills</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
