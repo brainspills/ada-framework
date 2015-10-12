@@ -13,33 +13,32 @@ var Config = {
 		require('dotenv').load();
 
 		var fs = require('fs');
-		var config_files = fs.readdirSync('./config');
-
+		var config_files = fs.readdirSync(process.env.PWD+'/config');
 		ada.config = {};
 		
 		for(var i=0; i<config_files.length; i++) {
 			var index = config_files[i];
 			index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
-			ada.config[index] = require('./../config/'+config_files[i]);
+			ada.config[index] = require(process.env.PWD+'/config/'+config_files[i]);
 		}
 
-		var packages = fs.readdirSync('./packages');
+		var packages = fs.readdirSync(process.env.PWD+'/packages');
 
 		/* jshint ignore:start */
 		for(i=0; i<packages.length; i++) {
 			
 			var package = packages[i];
 
-			if(fs.existsSync('./packages/'+package+'/config')) {
+			if(fs.existsSync(process.env.PWD+'/packages/'+package+'/config')) {
 
-				var configFiles = fs.readdirSync('./packages/'+package+'/config');
+				var configFiles = fs.readdirSync(process.env.PWD+'/packages/'+package+'/config');
 
 				for(var j=0; j<configFiles.length; j++) {
 			
 					for(var k=0; k<configFiles.length; k++) {
 						var index = configFiles[k];
 						index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
-						ada.config[index] = require('./../packages/'+package+'/config/'+configFiles[k]);
+						ada.config[index] = require(process.env.PWD+'/packages/'+package+'/config/'+configFiles[k]);
 					}
 					
 				}
@@ -64,7 +63,7 @@ var Config = {
 		var prompt = require('prompt-sync').prompt;
 		var writeConfig = false;
 
-		var template = fs.readFileSync('./.env.example');
+		var template = fs.readFileSync(process.env.PWD+'/.env.example');
 		template = template.toString();
 		
 		console.log('Checking configuration...');
@@ -72,10 +71,10 @@ var Config = {
 		var keys = {};
 		/* jshint ignore:start */
 		// Check if .env exists
-		if(fs.existsSync('./.env')) {
+		if(fs.existsSync(process.env.PWD+'/.env')) {
 
 		    // Check if keys are synchronized
-		    var current = fs.readFileSync('./.env');
+		    var current = fs.readFileSync(process.env.PWD+'/.env');
 			current = current.toString();
 
 			var template_keys = {};
@@ -143,7 +142,7 @@ var Config = {
 			for(var index in keys) {
 				content += index+'='+keys[index]+"\n";	
 			}
-			fs.writeFileSync('./.env', content);	
+			fs.writeFileSync(process.env.PWD+'/.env', content);	
 		}
 		
 	}

@@ -18,6 +18,7 @@
 
 			var fs = require('fs');
 
+			var Model = null;
 
 			if(fs.existsSync(process.env.PWD+'/models/' + model + '.js')) {								
 				Model = require(process.env.PWD+'/models/' + model + '.js');	
@@ -28,12 +29,13 @@
 				
 				for(i=0; i<packages.length; i++) {
 					var package = packages[i];
-					if(fs.existsSync(process.env.PWD+'/packages/'+package+'/http/models/' + model + '.js')) {
-						Model = require(process.env.PWD+'/packages/'+package+'/http/models/' + model + '.js');	
+					if(fs.existsSync(process.env.PWD+'/packages/'+package+'/models/' + model + '.js')) {
+						Model = require(process.env.PWD+'/packages/'+package+'/models/' + model + '.js');	
 					}
 				}
 				
 			}
+			
 			return new Model();
 
 		};

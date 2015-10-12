@@ -2,12 +2,13 @@
  * @package	ARK API
  * @module	Tools/Generator
  */
-module.exports = function Writer(name, args) {
+module.exports = function Writer(name, args, pckg) {
 
 	var self = this;
 	
 	self.name = name;
 	self.args = (typeof args === 'undefined') ? [] : args.split(',');
+	self.pckg = pckg;
 	self.content = '';
 
 	self.preset = {
@@ -30,7 +31,17 @@ module.exports = function Writer(name, args) {
 	self.write = function() {
 
 		var fs = require('fs');
-		var filename = process.env.PWD+'/'+self.write_to+'/'+name.toLowerCase()+'.js';
+
+		var filename = '';
+		if(typeof pckg === 'undefined') {
+			filename = process.env.PWD+'/'+self.write_to+'/'+name.toLowerCase()+'.js';
+		}
+		else {
+			
+			//TODO: Generator: make paths
+			filename = process.env.PWD+'/packages/'+self.pckg+'/'+self.write_to+'/'+name.toLowerCase()+'.js';
+		}
+		
 		fs.writeFileSync(filename, self.content);
 
 		console.log('Written to ' + filename);

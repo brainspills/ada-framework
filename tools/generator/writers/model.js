@@ -1,8 +1,8 @@
 var Writer = require(process.env.PWD+'/tools/generator/writers/writer.js');
 
-function Model(name, args) {
+function Model(name, args, pckg) {
 
-	Writer.call(this, name, args); 
+	Writer.call(this, name, args, pckg); 
 
 	var self = this;
 	self.write_to = 'models';
