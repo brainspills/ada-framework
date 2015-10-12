@@ -2,6 +2,7 @@
   "name": "AdaAPI",
   "version": "0.0.1",
   "description": "The Ada REST API Framework",
+  "license": "GNU GPL v2.0",
   "main": "index.js",
   "repository" : { 
     "type": "git",
