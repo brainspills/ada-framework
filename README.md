@@ -1,12 +1,14 @@
 # Ada Framework Documentation
 
-The framework aims to minimize coding by providing flexible functionality through configuration and definition. A REST API is basically a provider of resources (abstracted as models) through client requests (determined through routes). The framework heavily depends on model and route definitions to complete a client request.
+Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.
+
+Ada framework aims to minimize coding by providing flexible functionality through configuration and definition. A REST API is basically a provider of resources (abstracted as models) through client requests (determined through routes). The framework heavily depends on model and route definitions to complete a client request.
 
 
 For any request, the API returns any of the 3 basic types of responses: `collection`, `document`, and `controller`. `GET` requests are routed to either a collection or a document. `POST` and `PUT` requests which may require some additional logic are routed to controllers. The logic maybe defined within these controllers.
 
 
-_The API has an auto generated reference through its base URL (`/v1`) and can be interacted with from an API browser at `/browser/v1`._
+_The API has an auto generated reference through its base URL (`/`) and can be interacted with from an API browser at `/browser`._
 
 ## 1. Models
 
