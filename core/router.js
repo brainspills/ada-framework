@@ -152,6 +152,7 @@ var Router = {
 
 		var packages = fs.readdirSync('./packages');
 
+		/* jshint ignore:start */
 		for(i=0; i<packages.length; i++) {
 			
 			var package = packages[i];
@@ -178,6 +179,7 @@ var Router = {
 			}
 
 		}
+		/* jshint ignore:end */
 
 		return routes;
 
