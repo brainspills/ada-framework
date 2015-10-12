@@ -1,5 +1,7 @@
 # Ada Framework Documentation
 
+[![Build Status](https://travis-ci.org/brainspills/ada-framework.svg?branch=master)](https://travis-ci.org/brainspills/ada-framework)
+
 **Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.**
 
 Ada framework aims to minimize coding by providing flexible functionality through configuration and definition. A REST API is basically a provider of resources (abstracted as models) through client requests (determined through routes). The framework heavily depends on model and route definitions to complete a client request.
