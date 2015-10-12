@@ -1,5 +1,5 @@
 /*
- * @package	ARK API
+ * @package	Auth
  * @module	Services/JWT
  */
  var JWT = {

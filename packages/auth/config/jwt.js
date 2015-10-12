@@ -1,5 +1,5 @@
 /*
- * @package	Ada Framework
+ * @package	Auth
  * @module	Config/JWT
  */
 module.exports = {

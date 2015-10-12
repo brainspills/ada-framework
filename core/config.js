@@ -23,6 +23,32 @@ var Config = {
 			ada.config[index] = require('./../config/'+config_files[i]);
 		}
 
+		var packages = fs.readdirSync('./packages');
+
+		/* jshint ignore:start */
+		for(i=0; i<packages.length; i++) {
+			
+			var package = packages[i];
+
+			if(fs.existsSync('./packages/'+package+'/config')) {
+
+				var configFiles = fs.readdirSync('./packages/'+package+'/config');
+
+				for(var j=0; j<configFiles.length; j++) {
+			
+					for(var k=0; k<configFiles.length; k++) {
+						var index = configFiles[k];
+						index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
+						ada.config[index] = require('./../packages/'+package+'/config/'+configFiles[k]);
+					}
+					
+				}
+			
+			}
+
+		}
+		/* jshint ignore:end */
+		
 		// Create getConfig helper
 		global.getConfig = function(namespace, key) {
 

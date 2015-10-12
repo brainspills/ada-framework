@@ -107,6 +107,8 @@ var Router = {
 			
 			};
 			
+			//TODO: Routing: Create some kind of a "hooking" mechanism, probably load from http/hooks.js (Make auth as a hook)
+
 			// Reject requests without bearer token unless "meta.noauth" is applied on the route
 			if(!route.meta.noauth) {
 				ada.services.jwt.verify(request.authorization.credentials, function(err, decoded) {      
