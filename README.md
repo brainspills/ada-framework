@@ -1,7 +1,5 @@
 # Ada Framework Documentation
 
-**`npm update`** to install framework dependencies. To start serving, issue a `node index.js` or `nodejs index.js` command. On startup, the application will prompt you to configure the server.
-
 **Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.**
 
 Ada framework aims to minimize coding by providing flexible functionality through configuration and definition. A REST API is basically a provider of resources (abstracted as models) through client requests (determined through routes). The framework heavily depends on model and route definitions to complete a client request.
@@ -11,6 +9,14 @@ For any request, the API returns any of the 3 basic types of responses: `collect
 
 
 _The API has an auto generated reference through its base URL (`/`) and can be interacted with from an API browser at `/browser`._
+
+**Requirements**
+* NodeJS
+* MongoDB
+
+**Installation**
+
+**`npm update`** to install framework dependencies. To start serving, issue a `node index.js` or `nodejs index.js` command. On startup, the application will prompt you to configure the server.
 
 ## 1. Models
 
