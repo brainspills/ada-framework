@@ -10,10 +10,10 @@ module.exports = function Ada() {
 	{
 
 		// Load Configuration
-		require('./config.js').build();
+		require(process.env.PWD+'/core/config.js').build();
 
 		// Register Services
-		self.services = require('./service.js').register();
+		self.services = require(process.env.PWD+'/core/service.js').register();
 
 		// Create Server
 		self.restify = require('restify');

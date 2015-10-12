@@ -1,4 +1,4 @@
-var Writer = require('./writer.js');
+var Writer = require(process.env.PWD+'/tools/generator/writers/writer.js');
 
 function Model(name, args) {
 

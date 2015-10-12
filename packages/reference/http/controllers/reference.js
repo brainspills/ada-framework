@@ -1,5 +1,5 @@
 // Require parent controller
-var Controller = require('./../../../../core/controller.js');
+var Controller = extend('controller');
 
 // Define child controller
 function Reference(request, response) {
@@ -53,7 +53,8 @@ function Reference(request, response) {
 	self.reference = function () {
 
 		var fs = require('fs');
-		var body = fs.readFileSync('./tools/pages/reference.html');
+
+		var body = fs.readFileSync(process.env.PWD+'/packages/reference/pages/reference.html');
 		body = body.toString().replace("['routes_data']", JSON.stringify(self.getRoutes()));
 		body = body.toString().replace(new RegExp('<SERVER_NAME>', 'g'), getConfig('server', 'name'));
 		
@@ -68,7 +69,7 @@ function Reference(request, response) {
 	self.browser = function() {
 
 		var fs = require('fs');
-		var body = fs.readFileSync('./tools/pages/browser.html');
+		var body = fs.readFileSync(process.env.PWD+'/packages/reference/pages/browser.html');
 		body = body.toString().replace("['routes_data']", JSON.stringify(self.getRoutes()));
 		body = body.toString().replace(new RegExp('<SERVER_NAME>', 'g'), getConfig('server', 'name'));
 		

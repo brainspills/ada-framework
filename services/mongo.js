@@ -26,7 +26,7 @@
 
 				// Build indeces
 				var fs = require('fs');
-				var model_files = fs.readdirSync('./models');
+				var model_files = fs.readdirSync(process.env.PWD+'/models');
 
 				//TODO: Mongo Indexing: Load package models
 				

@@ -30,7 +30,7 @@ module.exports = function Writer(name, args) {
 	self.write = function() {
 
 		var fs = require('fs');
-		var filename = './'+self.write_to+'/'+name.toLowerCase()+'.js';
+		var filename = process.env.PWD+'/'+self.write_to+'/'+name.toLowerCase()+'.js';
 		fs.writeFileSync(filename, self.content);
 
 		console.log('Written to ' + filename);
@@ -44,7 +44,7 @@ module.exports = function Writer(name, args) {
 		self.replacers = [];
 
 		var fs = require('fs');
-		self.template = fs.readFileSync('./tools/generator/templates/'+self.name);
+		self.template = fs.readFileSync(process.env.PWD+'/tools/generator/templates/'+self.name);
 		self.content = self.template.toString();
 
 		self.getContent = function() {

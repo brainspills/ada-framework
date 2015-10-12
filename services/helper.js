@@ -8,22 +8,28 @@
 
 		console.log('Helper: Intializing helper service...');
 
+		global.extend = function(corefile) {
+
+			return require(process.env.PWD+'/core/'+corefile+'.js');
+
+		};
+
 		global.loadModel = function(model) {
 
 			var fs = require('fs');
 
 
-			if(fs.existsSync(__dirname+'/../models/' + model + '.js')) {								
-				Model = require(__dirname+'/../models/' + model + '.js');	
+			if(fs.existsSync(process.env.PWD+'/models/' + model + '.js')) {								
+				Model = require(process.env.PWD+'/models/' + model + '.js');	
 			}
 			else {
 
-				var packages = fs.readdirSync('./packages');
+				var packages = fs.readdirSync(process.env.PWD+'/packages');
 				
 				for(i=0; i<packages.length; i++) {
 					var package = packages[i];
-					if(fs.existsSync('./packages/'+package+'/http/models/' + model + '.js')) {
-						Model = require(__dirname+'/../packages/'+package+'/http/models/' + model + '.js');	
+					if(fs.existsSync(process.env.PWD+'/packages/'+package+'/http/models/' + model + '.js')) {
+						Model = require(process.env.PWD+'/packages/'+package+'/http/models/' + model + '.js');	
 					}
 				}
 				

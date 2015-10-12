@@ -46,14 +46,14 @@ var Router = {
 
 					case 'collection':
 
-						var Collection = require(__dirname+'/../core/collection.js');
+						var Collection = require(process.env.PWD+'/core/collection.js');
 						var collection = new Collection(request, response, route.binding.model);
 
 					break;
 
 					case 'document':
 
-						var Document = require(__dirname+'/../core/document.js');
+						var Document = require(process.env.PWD+'/core/document.js');
 						var docunent = null;
 
 						if(isEmpty(route.binding.embed)) {
@@ -69,25 +69,25 @@ var Router = {
 
 						var Controller = null;
 						if(isEmpty(route.binding.controller)) {
-							Controller = require(__dirname+'/../core/controller.js');	
+							Controller = require(process.env.PWD+'/core/controller.js');	
 						}
 						else {
 
 							var fs = require('fs');
 
-							if(fs.existsSync(__dirname+'/../http/controllers/' + route.binding.controller + '.js')) {
+							if(fs.existsSync(process.env.PWD+'/http/controllers/' + route.binding.controller + '.js')) {
 								
-								Controller = require(__dirname+'/../http/controllers/' + route.binding.controller + '.js');	
+								Controller = require(process.env.PWD+'/http/controllers/' + route.binding.controller + '.js');	
 
 							}
 							else {
 
-								var packages = fs.readdirSync('./packages');
+								var packages = fs.readdirSync(process.env.PWD+'/packages');
 								
 								for(i=0; i<packages.length; i++) {
 									var package = packages[i];
-									if(fs.existsSync('./packages/'+package+'/http/controllers/' + route.binding.controller + '.js')) {
-										Controller = require(__dirname+'/../packages/'+package+'/http/controllers/' + route.binding.controller + '.js');	
+									if(fs.existsSync(process.env.PWD+'/packages/'+package+'/http/controllers/' + route.binding.controller + '.js')) {
+										Controller = require(process.env.PWD+'/packages/'+package+'/http/controllers/' + route.binding.controller + '.js');	
 									}
 								}
 								
@@ -135,7 +135,7 @@ var Router = {
 		var routes = [];
 
 		var fs = require('fs');
-		var routeFiles = fs.readdirSync('./http/routes');
+		var routeFiles = fs.readdirSync(process.env.PWD+'/http/routes');
 
 		for(var i=0; i<routeFiles.length; i++) {
 			
@@ -144,7 +144,7 @@ var Router = {
 			var extension = filename.split('.').pop();
 
 			if(extension == 'js') {
-				var routeFile = require('./../http/routes/'+routeFiles[i]);
+				var routeFile = require(process.env.PWD+'/http/routes/'+routeFiles[i]);
 				for(j=0; j<routeFile.length; j++) {
 					routes.push(routeFile[j]);	
 				}
@@ -152,16 +152,16 @@ var Router = {
 			
 		}
 
-		var packages = fs.readdirSync('./packages');
+		var packages = fs.readdirSync(process.env.PWD+'/packages');
 
 		/* jshint ignore:start */
 		for(i=0; i<packages.length; i++) {
 			
 			var package = packages[i];
 
-			if(fs.existsSync('./packages/'+package+'/http/routes')) {
+			if(fs.existsSync(process.env.PWD+'/packages/'+package+'/http/routes')) {
 
-				var routeFiles = fs.readdirSync('./packages/'+package+'/http/routes');
+				var routeFiles = fs.readdirSync(process.env.PWD+'/packages/'+package+'/http/routes');
 
 				for(var j=0; j<routeFiles.length; j++) {
 			
@@ -170,7 +170,7 @@ var Router = {
 					var extension = filename.split('.').pop();
 
 					if(extension == 'js') {
-						var routeFile = require('./../packages/'+package+'/http/routes/'+routeFiles[j]);
+						var routeFile = require(process.env.PWD+'/packages/'+package+'/http/routes/'+routeFiles[j]);
 						for(k=0; k<routeFile.length; k++) {
 							routes.push(routeFile[k]);	
 						}

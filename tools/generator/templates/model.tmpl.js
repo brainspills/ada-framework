@@ -3,7 +3,7 @@
  * Auto-generated on <timestamp>
  */
 
-var Model = require('./../core/model.js');
+var Model = extend('model');
 
 function <Name>() {
 

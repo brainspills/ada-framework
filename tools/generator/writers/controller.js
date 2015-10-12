@@ -1,11 +1,11 @@
-var Writer = require('./writer.js');
+var Writer = require(process.env.PWD+'/tools/generator/writers/writer.js');
 
 function Controller(name, args) {
 
 	Writer.call(this, name, args); 
 
 	var self = this;
-	self.write_to = 'http/controllers/v1';
+	self.write_to = 'http/controllers';
 	
 	self.process = function() {
 
