@@ -94,7 +94,7 @@ var Router = {
 							}
 
 						}
-						
+
 						var controller = new Controller(request, response);
 						controller._construct(route.binding);
 						controller[route.binding.action].call(this);
@@ -107,25 +107,22 @@ var Router = {
 			
 			};
 			
-			//TODO: Routing: Create some kind of a "hooking" mechanism, probably load from http/hooks.js (Make auth as a hook)
+			var hook = require(process.env.PWD+'/core/hook.js');
+			var preRouteHooks = hook.getHooks('preroute');
+			var valid = true;
 
-			// Reject requests without bearer token unless "meta.noauth" is applied on the route
-			if(!route.meta.noauth) {
-				ada.services.jwt.verify(request.authorization.credentials, function(err, decoded) {      
-					if (err) {
-			        	response.send(new ada.restify.NotAuthorizedError("Access token is invalid."));
-			        	next();
-			      	} else {
-			      		//TODO: Routing: implement scopes
-			      		request.user = decoded;
-			      		router();
-			      	}
-		    	});
+			for(var i=0; i<preRouteHooks.length; i++) {
+				hook = preRouteHooks[i];
+				if(!hook.call(this, route, request, response)) {
+					valid = false;		
+					next();
+				}
 			}
-			else {
+
+			if(valid) {
 				router();
 			}
-			
+
 		});
 	
 	}, 

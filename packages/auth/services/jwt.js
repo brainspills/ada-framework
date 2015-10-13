@@ -28,10 +28,16 @@
 
 	},
 
-	verify : function(token, callback) {
+	verify : function(token) {
 
-		JWT.jwt.verify(token, JWT.key, callback);
-	
+		try {
+			var decoded = JWT.jwt.verify(token, JWT.key);
+		} catch(err) {
+			return false;
+		}
+
+		return decoded;
+		
 	}
 
 };
