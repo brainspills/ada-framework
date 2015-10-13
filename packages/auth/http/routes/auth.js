@@ -19,9 +19,9 @@ if(parseInt(getConfig('auth', 'enable')) == 1) {
 			},
 			
 			'binding'	: {
-				'controller' : 'auth',
+				'controller' : ['auth', 'auth'],
 				'action'	 : 'login',
-				'model'		 : getConfig('auth', 'model'),
+				'model'		 : ['auth', getConfig('auth', 'model')],
 				'keys'		 : [getConfig('auth', 'identity_key'), getConfig('auth', 'credential_key')]
 			},
 
@@ -43,9 +43,9 @@ if(parseInt(getConfig('auth', 'enable')) == 1) {
 			},
 			
 			'binding'	: {
-				'controller' : 'auth',
+				'controller' : ['auth', 'auth'],
 				'action'	 : 'register',
-				'model'		 : getConfig('auth', 'model')
+				'model'		 : ['auth', getConfig('auth', 'model')]
 			},
 
 			'meta'		: {

@@ -76,7 +76,10 @@ Model definitions are located inside the `models` directory and each model shoul
 
 ### 1.2 Loading Models
 
-The `loadModel()` helper will return an instance of the model.
+The `loadModel(model)` helper will return an instance of the model. The model  could be either of the following forms:
+
+* A string `<model_name>` which will be loaded from `./http/models`
+* An array `['<package_name>', '<model_name>']` which will be loaded from `./packages/<package_name>/models`
 
 ### 1.3 Model Methods
 
@@ -114,8 +117,8 @@ Route definitions are located inside the `http/routes` directory.
         },
 		
         "binding": {
-          "model": "<String, Optional. Model name of which this route is attached. Required when response type is "collection" or "document". Also required when "binding.keys" is present>",
-          "controller": "<String, Optional. Controller name of where the request is to be routed. Required when response type is "controller">",
+          "model": "<String or Array, Optional. Model name of which this route is attached. Required when response type is "collection" or "document". Also required when "binding.keys" is present>",
+          "controller": "<String or Array, Optional. Controller name of where the request is to be routed. Required when response type is "controller">",
           "action": "<String, Optional. Action name of where the request is to be routed. Required when response type is controller. No need to define action if this is set to "create" or "update">",
           "embed": "<String, Optional. Embed a related collection to the model retrieved. The reference is defined by the "embed" property of the model definition>"
           "keys": [

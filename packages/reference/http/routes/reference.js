@@ -14,7 +14,7 @@ module.exports =  [
 		},
 		
 		'binding'	: {
-			'controller' : 'reference',
+			'controller' : ['reference', 'reference'],
 			'action'	 : 'reference'
 		},
 
@@ -34,7 +34,7 @@ module.exports =  [
 		},
 		
 		'binding'	: {
-			'controller' : 'reference',
+			'controller' : ['reference', 'reference'],
 			'action'	 : 'browser'
 		},
 
