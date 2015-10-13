@@ -46,12 +46,12 @@
 <h2>
 <a id="1-models" class="anchor" href="#1-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Models</h2>
 
-<p>Model definitions are located inside the <code>./models</code> directory and each model should extend the core model class (<code>./core/model.js</code>).</p>
+<p>Model definitions are located inside the <code>models</code> directory and each model should extend the core model class (<code>./core/model.js</code>).</p>
 
 <h3>
 <a id="11-defining-models" class="anchor" href="#11-defining-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.1 Defining Models</h3>
 
-<pre><code>var Model = require('./../core/model.js');
+<pre><code>var Model = extend('model');
 
 function &lt;Model Name&gt;() {
 
@@ -130,7 +130,7 @@ module.exports = &lt;Model Name&gt;;
 <h2>
 <a id="2-routing" class="anchor" href="#2-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Routing</h2>
 
-<p>Route definitions are located inside the <code>./http/routes</code> directory.</p>
+<p>Route definitions are located inside the <code>http/routes</code> directory.</p>
 
 <h3>
 <a id="21-defining-routes" class="anchor" href="#21-defining-routes" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Defining Routes</h3>
@@ -266,9 +266,9 @@ module.exports = &lt;Model Name&gt;;
 <h4>
 <a id="defining-controllers" class="anchor" href="#defining-controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defining Controllers</h4>
 
-<p>Controller definitions are located inside the <code>./http/controllers</code> directory and each controller should extend the core controller class (<code>./core/controller.js</code>).</p>
+<p>Controller definitions are located inside the <code>http/controllers</code> directory and each controller should extend the core controller class (<code>./core/controller.js</code>).</p>
 
-<pre><code>var Controller = require('./../../../core/controller.js');
+<pre><code>var Controller = extend('controller');
 
 function &lt;Controller Name&gt;(request, response) {
 
@@ -338,24 +338,39 @@ module.exports = &lt;Controller Name&gt;;
 <hr>
 
 <h2>
-<a id="3-generators" class="anchor" href="#3-generators" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Generators</h2>
+<a id="3-authentication" class="anchor" href="#3-authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Authentication</h2>
+
+<hr>
+
+<h2>
+<a id="4-hooks" class="anchor" href="#4-hooks" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Hooks</h2>
+
+<hr>
+
+<h2>
+<a id="5-packaging" class="anchor" href="#5-packaging" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. Packaging</h2>
+
+<hr>
+
+<h2>
+<a id="6-generators" class="anchor" href="#6-generators" aria-hidden="true"><span class="octicon octicon-link"></span></a>6. Generators</h2>
 
 <h3>
-<a id="31-auto-generating-models" class="anchor" href="#31-auto-generating-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 Auto Generating Models</h3>
+<a id="61-auto-generating-models" class="anchor" href="#61-auto-generating-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>6.1 Auto Generating Models</h3>
 
-<pre><code>npm run-script generate:model -- &lt;model name&gt; &lt;comma separated list of keys&gt;
+<pre><code>npm run-script generate:model -- &lt;model name&gt; &lt;comma separated list of keys&gt; &lt;optional: package name&gt;
 OR
-node tools/generate model &lt;model name&gt; &lt;comma separated list of keys&gt;
+node tools/generate model &lt;model name&gt; &lt;comma separated list of keys&gt; &lt;optional: package name&gt;
 </code></pre>
 
 <p>This tool will automatically generate a basic model definition based from the provided name and list of keys.</p>
 
 <h3>
-<a id="32-auto-generating-resources" class="anchor" href="#32-auto-generating-resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 Auto Generating Resources</h3>
+<a id="62-auto-generating-resources" class="anchor" href="#62-auto-generating-resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>6.2 Auto Generating Resources</h3>
 
-<pre><code>npm run-script generate:resource -- &lt;resource name&gt; &lt;comma separated list of keys&gt;
+<pre><code>npm run-script generate:resource -- &lt;resource name&gt; &lt;comma separated list of keys&gt; &lt;optional: package name&gt;
 OR
-node tools/generate resource &lt;resource name&gt; &lt;comma separated list of keys&gt;
+node tools/generate resource &lt;resource name&gt; &lt;comma separated list of keys&gt; &lt;optional: package name&gt;
 </code></pre>
 
 <p>This tool will automatically generate a basic model definition based from the provided name and list of keys along with the following associated routes:</p>
@@ -374,11 +389,11 @@ node tools/generate resource &lt;resource name&gt; &lt;comma separated list of k
 </ul>
 
 <h3>
-<a id="33-auto-generating-controllers" class="anchor" href="#33-auto-generating-controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 Auto Generating Controllers</h3>
+<a id="63-auto-generating-controllers" class="anchor" href="#63-auto-generating-controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>6.3 Auto Generating Controllers</h3>
 
-<pre><code>npm run-script generate:controller -- &lt;controller name&gt; &lt;comma separated list of actions&gt;
+<pre><code>npm run-script generate:controller -- &lt;controller name&gt; &lt;comma separated list of actions&gt; &lt;optional: package name&gt;
 OR
-node tools/generate controller &lt;controller name&gt; &lt;comma separated list of actions&gt;
+node tools/generate controller &lt;controller name&gt; &lt;comma separated list of actions&gt; &lt;optional: package name&gt;
 </code></pre>
 
 <p>This tool will automatically generate a controller definition based from the provided name and list of actions.</p>
@@ -386,7 +401,7 @@ node tools/generate controller &lt;controller name&gt; &lt;comma separated list 
 <hr>
 
 <h2>
-<a id="4-helpers" class="anchor" href="#4-helpers" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Helpers</h2>
+<a id="7-helpers" class="anchor" href="#7-helpers" aria-hidden="true"><span class="octicon octicon-link"></span></a>7. Helpers</h2>
 
 <ul>
 <li>
@@ -402,10 +417,9 @@ node tools/generate controller &lt;controller name&gt; &lt;comma separated list 
 <hr>
 
 <h2>
-<a id="5-under-development--known-issues" class="anchor" href="#5-under-development--known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. Under Development / Known Issues</h2>
+<a id="8-under-development--known-issues" class="anchor" href="#8-under-development--known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>8. Under Development / Known Issues</h2>
 
 <ul>
-<li>Standardization of success responses for route methods other than GET</li>
 <li>Standardization of error responses for unique validation fails</li>
 <li>Ensure data types for document create/update based on schema definition</li>
 <li>Validation for presence of related collection on document create/update</li>
@@ -426,14 +440,14 @@ node tools/todo
 <hr>
 
 <h2>
-<a id="6-improvements" class="anchor" href="#6-improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>6. Improvements</h2>
+<a id="9-improvements" class="anchor" href="#9-improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>9. Improvements</h2>
 
 <p>A list of stuff that may be needed to improve the framework</p>
 
 <ul>
 <li>Database abstraction</li>
+<li>Package "namespacing"</li>
 <li>Model, route, and controller modifier tool</li>
-<li>Authentication module creator tool (which means expansions maybe enabled through a module loader service a.k.a. <em>packaging</em>)</li>
 </ul>
 
       <footer class="site-footer">
