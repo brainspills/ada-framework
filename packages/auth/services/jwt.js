@@ -10,7 +10,7 @@
 
 	init : function() {
 
-		console.log('JWT: Intializing JWT service...');
+		require('util').log('JWT: Intializing JWT service...');
 
 		JWT.key = getConfig('server', 'key');
 		JWT.exp = parseInt(getConfig('jwt', 'exp'));

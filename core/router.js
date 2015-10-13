@@ -22,7 +22,7 @@ var Router = {
 	create : function (server, route) 
 	{
 
-		console.log('Router: Registering route [' + route.method.toUpperCase() + ' ' + route.route +']');
+		require('util').log('Router: Registering route [' + route.method.toUpperCase() + ' ' + route.route +']');
 
 		if(route.method == 'delete') {
 			route.method = 'del';

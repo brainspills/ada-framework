@@ -11,7 +11,7 @@
 
 	init : function() {
 
-		console.log('Mongo: Intializing MongoDB client...');
+		require('util').log('Mongo: Intializing MongoDB client...');
 
 		Mongo.client = require('mongodb').MongoClient;
 		Mongo.url = 'mongodb://'+getConfig('mongo', 'host')+':'+getConfig('mongo', 'port')+'/'+getConfig('mongo', 'dbname');
@@ -22,7 +22,7 @@
 			if(isEmpty(err)) {
 				
 				Mongo.db = db;
-				console.log('Mongo: Connected to MongoDB server ['+getConfig('mongo', 'host')+':'+getConfig('mongo', 'port')+']');
+				require('util').log('Mongo: Connected to MongoDB server ['+getConfig('mongo', 'host')+':'+getConfig('mongo', 'port')+']');
 
 				// Build indeces
 				var fs = require('fs');
@@ -55,16 +55,16 @@
 							if(!isEmpty(indeces)) {
 			
 								for(var indexName in indeces) {
-									console.log('Mongo: Creating index in ' + collection + ': ' + indexName);
+									require('util').log('Mongo: Creating index in ' + collection + ': ' + indexName);
 									indeces[indexName].options.name = indexName;
 									/*jshint -W083 */
 									Mongo.db.collection(collection).createIndex(indeces[indexName].fields, indeces[indexName].options, function(err, result) {
 										if(isEmpty(err)) {
-											console.log('Mongo: Index ' + result + ' created.');
+											require('util').log('Mongo: Index ' + result + ' created.');
 										}
 										else {
-											console.log('Mongo: Index creation error.');
-											console.log(err);
+											require('util').log('Mongo: Index creation error.');
+											require('util').log(err);
 										}
 										
 									});
@@ -117,16 +117,16 @@
 									if(!isEmpty(indeces)) {
 					
 										for(var indexName in indeces) {
-											console.log('Mongo: Creating index in ' + collection + ': ' + indexName);
+											require('util').log('Mongo: Creating index in ' + collection + ': ' + indexName);
 											indeces[indexName].options.name = indexName;
 											/*jshint -W083 */
 											Mongo.db.collection(collection).createIndex(indeces[indexName].fields, indeces[indexName].options, function(err, result) {
 												if(isEmpty(err)) {
-													console.log('Mongo: Index ' + result + ' created.');
+													require('util').log('Mongo: Index ' + result + ' created.');
 												}
 												else {
-													console.log('Mongo: Index creation error.');
-													console.log(err);
+													require('util').log('Mongo: Index creation error.');
+													require('util').log(err);
 												}
 												
 											});
@@ -148,7 +148,7 @@
 
 			}
 			else {
-				console.log('[!] Mongo: Failed connecting to MongoDB server ['+getConfig('mongo', 'host')+':'+getConfig('mongo', 'port')+']');
+				require('util').log('[!] Mongo: Failed connecting to MongoDB server ['+getConfig('mongo', 'host')+':'+getConfig('mongo', 'port')+']');
 				ada.server.close();
 			}
 			

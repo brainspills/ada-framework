@@ -42,7 +42,7 @@ module.exports = function Ada() {
 		// Listen for incoming requests
 		self.server.listen(getConfig('server', 'port'), function() {
 
-			console.log('Server: ' + getConfig('server', 'name') + ' listening on port ' + getConfig('server', 'port'));
+			require('util').log('Server: ' + getConfig('server', 'name') + ' listening on port ' + getConfig('server', 'port'));
 
 		});
 

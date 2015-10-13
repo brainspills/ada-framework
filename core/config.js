@@ -66,7 +66,7 @@ var Config = {
 		var template = fs.readFileSync(process.env.PWD+'/.env.example');
 		template = template.toString();
 		
-		console.log('Checking configuration...');
+		require('util').log('Checking configuration...');
 
 		var keys = {};
 		/* jshint ignore:start */
@@ -115,7 +115,7 @@ var Config = {
 			// Create new configuration
 			
 			writeConfig = true;
-			console.log('Creating new configuration');
+			require('util').log('Creating new configuration');
 			
 			var lines = template.split("\n");
 			for(var i=0; i<lines.length; i++) {
@@ -137,7 +137,7 @@ var Config = {
 
 		// Write configuration
 		if(writeConfig) {
-			console.log("\nWriting configuration");
+			require('util').log("\nWriting configuration");
 			var content = '';
 			for(var index in keys) {
 				content += index+'='+keys[index]+"\n";	

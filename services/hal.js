@@ -6,7 +6,7 @@
 
 	init : function() {
 
-		console.log('HAL: Intializing HAL formatter service...');
+		require('util').log('HAL: Intializing HAL formatter service...');
 
 	},
 

@@ -22,11 +22,11 @@ _The API has an auto generated reference through its base URL (`/`) and can be i
 
 ## 1. Models
 
-Model definitions are located inside the `./models` directory and each model should extend the core model class (`./core/model.js`).
+Model definitions are located inside the `models` directory and each model should extend the core model class (`./core/model.js`).
 
 ### 1.1 Defining Models
 
-    var Model = require('./../core/model.js');
+    var Model = extend('model');
 
     function <Model Name>() {
 
@@ -92,7 +92,7 @@ The `loadModel()` helper will return an instance of the model.
 
 ## 2. Routing
 
-Route definitions are located inside the `./http/routes` directory.
+Route definitions are located inside the `http/routes` directory.
 
 ### 2.1 Defining Routes
 
@@ -212,9 +212,9 @@ To route a request to a controller, set the following values in the route defini
 
 #### Defining Controllers
 
-Controller definitions are located inside the `./http/controllers` directory and each controller should extend the core controller class (`./core/controller.js`).
+Controller definitions are located inside the `http/controllers` directory and each controller should extend the core controller class (`./core/controller.js`).
 
-    var Controller = require('./../../../core/controller.js');
+    var Controller = extend('controller');
 
     function <Controller Name>(request, response) {
 

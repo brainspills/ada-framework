@@ -8,7 +8,7 @@
 
 	init : function() {
 
-		console.log('Validate: Intializing validation service...');
+		require('util').log('Validate: Intializing validation service...');
 		Validate.test = require('validate.js');
 
 	}

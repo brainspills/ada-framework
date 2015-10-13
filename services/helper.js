@@ -6,7 +6,7 @@
 
 	init : function() {
 
-		console.log('Helper: Intializing helper service...');
+		require('util').log('Helper: Intializing helper service...');
 
 		global.extend = function(corefile) {
 
