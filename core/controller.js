@@ -21,9 +21,12 @@ module.exports = function Controller(request, response) {
 
 		self.model.create(self.request.params, function(result, err){
 
-			//TODO: Document create: Standardize response
-		
-			self.response.send(result);	
+			if(!isEmpty(err)) {
+				self.response.send(err);
+			}
+			else {
+				self.response.send(201, {"message":"Resource created succesfully."});
+			}
 		
 		});
 		
@@ -33,9 +36,12 @@ module.exports = function Controller(request, response) {
 
 		self.model.update(self.request.params, function(result, err) {
 
-			//TODO: Document update: Standardize response
-
-			self.response.send(result);	
+			if(!isEmpty(err)) {
+				self.response.send(err);
+			}
+			else {
+				self.response.send(200, {"message":"Resource updated successfully."});
+			}
 
 		});
 
@@ -45,9 +51,12 @@ module.exports = function Controller(request, response) {
 
 		self.model.delete(self.request.params.id, function(result, err) {
 
-			//TODO: Document delete: Standardize response
-
-			self.response.send(result);	
+			if(!isEmpty(err)) {
+				self.response.send(err);
+			}
+			else {
+				self.response.send(200, {"message":"Resource deleted successfully."});
+			}
 
 		});
 

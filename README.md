@@ -292,17 +292,17 @@ For routes that remove a document from a collection, a reserved action name of `
 
 ### 6.1 Auto Generating Models
 
-    npm run-script generate:model -- <model name> <comma separated list of keys>
+    npm run-script generate:model -- <model name> <comma separated list of keys> <optional: package name>
     OR
-    node tools/generate model <model name> <comma separated list of keys>
+    node tools/generate model <model name> <comma separated list of keys> <optional: package name>
 
 This tool will automatically generate a basic model definition based from the provided name and list of keys.
 
 ### 6.2 Auto Generating Resources
 
-    npm run-script generate:resource -- <resource name> <comma separated list of keys>
+    npm run-script generate:resource -- <resource name> <comma separated list of keys> <optional: package name>
     OR
-    node tools/generate resource <resource name> <comma separated list of keys>
+    node tools/generate resource <resource name> <comma separated list of keys> <optional: package name>
 
 This tool will automatically generate a basic model definition based from the provided name and list of keys along with the following associated routes:
 
@@ -314,9 +314,9 @@ This tool will automatically generate a basic model definition based from the pr
 
 ### 6.3 Auto Generating Controllers
 
-    npm run-script generate:controller -- <controller name> <comma separated list of actions>
+    npm run-script generate:controller -- <controller name> <comma separated list of actions> <optional: package name>
     OR
-    node tools/generate controller <controller name> <comma separated list of actions>
+    node tools/generate controller <controller name> <comma separated list of actions> <optional: package name>
 
 This tool will automatically generate a controller definition based from the provided name and list of actions.
 
@@ -333,7 +333,6 @@ This tool will automatically generate a controller definition based from the pro
 
 ## 8. Under Development / Known Issues
 
-* Standardization of success responses for route methods other than GET
 * Standardization of error responses for unique validation fails
 * Ensure data types for document create/update based on schema definition
 * Validation for presence of related collection on document create/update

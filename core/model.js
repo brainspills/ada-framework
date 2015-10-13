@@ -19,7 +19,7 @@ module.exports = function Model() {
 
 		var result = ada.services.validate.test(doc, constraints);
 
-		//TODO: Model payload validation: Validate uniqueness
+		//TODO: Model payload validation: Validate uniqueness (return 409 as error)
 		//TODO: Model payload validation: Validate presence of related document in a collection (references)
 		//TODO: Model payload validation: Ensure datatypes
 
