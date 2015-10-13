@@ -14,6 +14,8 @@ module.exports = function Collection(request, response, model) {
 	self.page = isEmpty(self.request.params.page) ? 1 : self.request.params.page;
 	self.query = {};
 
+	//TODO: Support partial keys (fields parameter)
+
 	for(var index in self.request.params) {
 		if(index != 'page') {
 			self.query[index] = self.request.params[index];

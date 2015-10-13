@@ -12,12 +12,15 @@ module.exports = function Document(request, response, model, embed) {
 	self.model = loadModel(model);
 	self.embed = embed;
 
+	//TODO: Support partial keys (fields parameter)
+
 	self.model.id(self.request.params.id, function(document, err) {
 
 		if(isEmpty(err)) {
 
 			if(!isEmpty(self.embed)) {
 				
+				//TODO: Support multiple embeds
 				var embed_settings = self.model.embed[self.embed];
 				var embed = loadModel(embed_settings.model);
 				var page = isEmpty(self.request.params.page) ? 1 : self.request.params.page;

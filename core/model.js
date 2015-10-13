@@ -54,7 +54,7 @@ module.exports = function Model() {
 			});
 		}
 		else {
-			var err = new ada.restify.BadRequestError("Data validation failed");
+			var err = new ada.restify.BadRequestError('Data validation failed');
 			err.body.details = self.documentError;
 			callback.call(this, err, err); 
 		}
@@ -133,8 +133,8 @@ module.exports = function Model() {
 	self.all = function(page, callback) {
 
 		var cursor = ada.services.mongo.db.collection(self.collectionName).find()
-			.skip(parseInt(getConfig('mongo', 'pagesize'))*(parseInt(page)-1))
-			.limit(parseInt(getConfig('mongo', 'pagesize')));
+			.skip(parseInt(getConfig('collection', 'pagesize'))*(parseInt(page)-1))
+			.limit(parseInt(getConfig('collection', 'pagesize')));
 
 		self.hydrate(cursor, callback);
 
@@ -147,8 +147,8 @@ module.exports = function Model() {
 	self.find = function(page, query, callback) {
 
 		var cursor = ada.services.mongo.db.collection(self.collectionName).find(query)
-			.skip(parseInt(getConfig('mongo', 'pagesize'))*(parseInt(page)-1))
-			.limit(parseInt(getConfig('mongo', 'pagesize')));
+			.skip(parseInt(getConfig('collection', 'pagesize'))*(parseInt(page)-1))
+			.limit(parseInt(getConfig('collection', 'pagesize')));
 
 		self.hydrate(cursor, callback);
 
@@ -200,7 +200,7 @@ module.exports = function Model() {
 			    	collection.push(self.removeHidden(doc));
 			    }
 			    else {
-			    	callback.call(this, collection, total, getConfig('mongo', 'pagesize'));
+			    	callback.call(this, collection, total, getConfig('collection', 'pagesize'));
 			    }
 		    });
 		});

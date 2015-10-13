@@ -20,20 +20,11 @@
 
 			var Model = null;
 
-			if(fs.existsSync(process.env.PWD+'/models/' + model + '.js')) {								
-				Model = require(process.env.PWD+'/models/' + model + '.js');	
+			if(typeof model == 'string') {
+				Model = require(process.env.PWD+'/models/' + model + '.js');
 			}
 			else {
-
-				var packages = fs.readdirSync(process.env.PWD+'/packages');
-				
-				for(i=0; i<packages.length; i++) {
-					var package = packages[i];
-					if(fs.existsSync(process.env.PWD+'/packages/'+package+'/models/' + model + '.js')) {
-						Model = require(process.env.PWD+'/packages/'+package+'/models/' + model + '.js');	
-					}
-				}
-				
+				Model = require(process.env.PWD+'/packages/'+model[0]+'/models/' + model[1] + '.js');	
 			}
 			
 			return new Model();

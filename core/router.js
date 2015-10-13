@@ -74,23 +74,11 @@ var Router = {
 						else {
 
 							var fs = require('fs');
-
-							if(fs.existsSync(process.env.PWD+'/http/controllers/' + route.binding.controller + '.js')) {
-								
-								Controller = require(process.env.PWD+'/http/controllers/' + route.binding.controller + '.js');	
-
+							if(typeof route.binding.controller == 'string') {
+								Controller = require(process.env.PWD+'/http/controllers/' + route.binding.controller + '.js');
 							}
 							else {
-
-								var packages = fs.readdirSync(process.env.PWD+'/packages');
-								
-								for(i=0; i<packages.length; i++) {
-									var package = packages[i];
-									if(fs.existsSync(process.env.PWD+'/packages/'+package+'/http/controllers/' + route.binding.controller + '.js')) {
-										Controller = require(process.env.PWD+'/packages/'+package+'/http/controllers/' + route.binding.controller + '.js');	
-									}
-								}
-								
+								Controller = require(process.env.PWD+'/packages/'+route.binding.controller[0]+'/http/controllers/' + route.binding.controller[1] + '.js');	
 							}
 
 						}

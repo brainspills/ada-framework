@@ -27,7 +27,7 @@ module.exports = function Controller(request, response) {
 			else {
 				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+doc.id);
 				var body = {};
-				body.message = 'Resource successfully created';
+				body.message = 'Document successfully created';
 				body[self.model.documentURI] = doc;
 				self.response.send(201, body);
 			}
@@ -46,7 +46,7 @@ module.exports = function Controller(request, response) {
 			else {
 				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+self.request.params.id);
 				self.response.send(200, {
-					'message': 'Resource successfully updated.'
+					'message': 'Document successfully updated.'
 				});
 			}
 
@@ -63,7 +63,7 @@ module.exports = function Controller(request, response) {
 			}
 			else {
 				self.response.send(200, {
-					'message': 'Resource successfully deleted.'
+					'message': 'Document successfully deleted.'
 				});
 			}
 

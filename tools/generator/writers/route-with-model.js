@@ -9,7 +9,15 @@ function RouteWithModel(name, args, pckg) {
 	
 	self.process = function() {
 
-		var mainTemplate = new self.Template('route-with-model.tmpl.js')
+		var template = 'route-with-model-packaged.tmpl.js';
+		var packaged = true;
+
+		if(typeof self.pckg === 'undefined') {
+			template = 'route-with-model.tmpl.js';
+			packaged = false;
+		}
+		
+		var mainTemplate = new self.Template(template)
 
 		.addReplacer('<Name>', self.name, function(name) {
 			return self.preset.ucfirst(name);
@@ -20,6 +28,12 @@ function RouteWithModel(name, args, pckg) {
 		.addReplacer('<names>', self.name, function(name) {
 			return self.preset.pluralize(name);
 		});
+
+		if(packaged) {
+			mainTemplate.addReplacer('<package>', self.pckg, function(pckg) {
+				return self.preset.tolower(pckg);
+			});
+		}
 
 		return mainTemplate.getContent();
 
