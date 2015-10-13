@@ -30,14 +30,16 @@
 
 	verify : function(token) {
 
+		var decoded = {};
+		
 		try {
-			var decoded = JWT.jwt.verify(token, JWT.key);
+			decoded = JWT.jwt.verify(token, JWT.key);
 		} catch(err) {
 			return false;
 		}
 
 		return decoded;
-		
+
 	}
 
 };
