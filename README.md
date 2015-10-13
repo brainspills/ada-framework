@@ -276,9 +276,21 @@ For routes that remove a document from a collection, a reserved action name of `
 
 ***
 
-## 3. Generators
+## 3. Authentication
 
-### 3.1 Auto Generating Models
+***
+
+## 4. Hooks
+
+***
+
+## 5. Packaging
+
+***
+
+## 6. Generators
+
+### 6.1 Auto Generating Models
 
     npm run-script generate:model -- <model name> <comma separated list of keys>
     OR
@@ -286,7 +298,7 @@ For routes that remove a document from a collection, a reserved action name of `
 
 This tool will automatically generate a basic model definition based from the provided name and list of keys.
 
-### 3.2 Auto Generating Resources
+### 6.2 Auto Generating Resources
 
     npm run-script generate:resource -- <resource name> <comma separated list of keys>
     OR
@@ -300,7 +312,7 @@ This tool will automatically generate a basic model definition based from the pr
 * **`PUT /<resource>/:id`** - to update a document
 * **`DELETE /<resource>/:id`** - to delete a document
 
-### 3.3 Auto Generating Controllers
+### 6.3 Auto Generating Controllers
 
     npm run-script generate:controller -- <controller name> <comma separated list of actions>
     OR
@@ -310,7 +322,7 @@ This tool will automatically generate a controller definition based from the pro
 
 ***
 
-## 4. Helpers
+## 7. Helpers
 
 * **`getConfig(namespace, key)`** - Returns a configuration value
 * **`hash(string)`** - Returns a hashed form of a string. A key for hashing is set from `.env` using the `SERVER_KEY` key
@@ -319,7 +331,7 @@ This tool will automatically generate a controller definition based from the pro
 
 *** 
 
-## 5. Under Development / Known Issues
+## 8. Under Development / Known Issues
 
 * Standardization of success responses for route methods other than GET
 * Standardization of error responses for unique validation fails
@@ -339,10 +351,10 @@ Annotate the file line with a `//TODO: <description>` for it to display in the r
 
 *** 
 
-## 6. Improvements
+## 9. Improvements
 
 A list of stuff that may be needed to improve the framework
 
 * Database abstraction
+* Package "namespacing"
 * Model, route, and controller modifier tool
-* Authentication module creator tool (which means expansions maybe enabled through a module loader service a.k.a. _packaging_)

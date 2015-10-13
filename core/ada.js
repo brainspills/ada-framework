@@ -32,7 +32,7 @@ module.exports = function Ada() {
 		self.server.use(morgan('dev'));
 
 		// Register Routes
-		self.routes = require('./router.js').register(self.server);
+		self.routes = require(process.env.PWD+'/core/router.js').register(self.server);
 		
 	};
 
