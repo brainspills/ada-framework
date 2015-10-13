@@ -39,12 +39,17 @@ module.exports = function Model() {
 	self.create = function(doc, callback) {
 
 		if(self.isValidDocument(doc)) {
+			
+ 			doc._id = new ada.services.mongo.ObjectID();
+
 			ada.services.mongo.db.collection(self.collectionName).insertOne(doc, function(err, result) {	
 				if(isEmpty(err)) {
-					callback.call(this, result, err);
+					doc.id = doc._id;
+					delete doc._id;
+					callback.call(this, doc, result, err);
 				}
 				else {
-					callback.call(this, err, err);
+					callback.call(this, null, err, err);
 				}
 			});
 		}

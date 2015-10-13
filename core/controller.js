@@ -19,13 +19,17 @@ module.exports = function Controller(request, response) {
 
 	self.create = function () {
 
-		self.model.create(self.request.params, function(result, err){
+		self.model.create(self.request.params, function(doc, result, err){
 
 			if(!isEmpty(err)) {
 				self.response.send(err);
 			}
 			else {
-				self.response.send(201, {"message":"Resource created succesfully."});
+				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+doc.id);
+				var body = {};
+				body.message = 'Resource successfully created';
+				body[self.model.documentURI] = doc;
+				self.response.send(201, body);
 			}
 		
 		});
@@ -40,7 +44,10 @@ module.exports = function Controller(request, response) {
 				self.response.send(err);
 			}
 			else {
-				self.response.send(200, {"message":"Resource updated successfully."});
+				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+self.request.params.id);
+				self.response.send(200, {
+					'message': 'Resource successfully updated.'
+				});
 			}
 
 		});
@@ -55,7 +62,9 @@ module.exports = function Controller(request, response) {
 				self.response.send(err);
 			}
 			else {
-				self.response.send(200, {"message":"Resource deleted successfully."});
+				self.response.send(200, {
+					'message': 'Resource successfully deleted.'
+				});
 			}
 
 		});
