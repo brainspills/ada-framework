@@ -25,7 +25,7 @@ module.exports = function Controller(request, response) {
 				self.response.send(err);
 			}
 			else {
-				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+doc.id);
+				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+doc[self.model.identifier]);
 				var body = {};
 				body.message = 'Document successfully created';
 				body[self.model.documentURI] = doc;
