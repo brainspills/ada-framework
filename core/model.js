@@ -7,7 +7,8 @@ module.exports = function Model() {
 	self = this;
 	self.identifier = 'id';
 	self.documentError = {};
-	self.database = ada.services.mongo.db;
+	self.mongo = ada.services.mongo;
+	self.database = self.mongo.db;
 
 	self.isValidDocument = function(doc) {
 
@@ -42,7 +43,7 @@ module.exports = function Model() {
 
 		if(self.isValidDocument(doc)) {
 
- 			doc._id = new ada.services.mongo.ObjectID();
+ 			doc._id = new self.mongo.ObjectID();
  			
  			//TODO: Insert doc.created_at
  			//TODO: Insert doc.updated_at
@@ -80,10 +81,8 @@ module.exports = function Model() {
 		// Resolve identifier
 		var query = {};
 		if(self.identifier == 'id') {
-			var objId = '';
 			try {
-				objId = ada.services.mongo.ObjectID(doc.id);
-				{_id:objId}
+				query = {_id:self.mongo.ObjectID(doc.id)};
 			}
 			catch(e) {
 				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
@@ -124,10 +123,8 @@ module.exports = function Model() {
 		// Resolve identifier
 		var query = {};
 		if(self.identifier == 'id') {
-			var objId = '';
 			try {
-				objId = ada.services.mongo.ObjectID(id);
-				{_id:objId}
+				query = {_id:self.mongo.ObjectID(id)};
 			}
 			catch(e) {
 				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
@@ -190,10 +187,8 @@ module.exports = function Model() {
 		// Resolve identifier
 		var query = {};
 		if(self.identifier == 'id') {
-			var objId = '';
 			try {
-				objId = ada.services.mongo.ObjectID(id);
-				{_id:objId}
+				query = {_id:self.mongo.ObjectID(id)};
 			}
 			catch(e) {
 				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
