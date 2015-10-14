@@ -20,6 +20,8 @@ module.exports = {
 
 		var packages = fs.readdirSync(process.env.PWD+'/packages');
 
+		//TODO: Namespace services
+
 		/* jshint ignore:start */
 		for(i=0; i<packages.length; i++) {
 			

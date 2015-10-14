@@ -24,6 +24,8 @@ var Config = {
 
 		var packages = fs.readdirSync(process.env.PWD+'/packages');
 
+		//TODO: Namespace configs
+
 		/* jshint ignore:start */
 		for(i=0; i<packages.length; i++) {
 			

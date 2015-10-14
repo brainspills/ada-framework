@@ -159,6 +159,8 @@ module.exports = function Model() {
 	 */
 	self.id = function(objectId, callback) {
 
+		//TODO: Support configurable ID key
+
 		var objId = '';
 
 		try {
