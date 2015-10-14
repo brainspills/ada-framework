@@ -51,6 +51,8 @@
 							/*jshint +W051 */ 
 
 							Mongo.db.collection(collection).dropIndexes();
+
+							//TODO: Build unique index for indentifier keys
 							
 							if(!isEmpty(indeces)) {
 			

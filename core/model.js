@@ -5,7 +5,9 @@
 module.exports = function Model() {
 
 	self = this;
+	self.identifier = 'id';
 	self.documentError = {};
+	self.database = ada.services.mongo.db;
 
 	self.isValidDocument = function(doc) {
 
@@ -39,13 +41,14 @@ module.exports = function Model() {
 	self.create = function(doc, callback) {
 
 		if(self.isValidDocument(doc)) {
-			
+
  			doc._id = new ada.services.mongo.ObjectID();
  			
  			//TODO: Insert doc.created_at
  			//TODO: Insert doc.updated_at
 
-			ada.services.mongo.db.collection(self.collectionName).insertOne(doc, function(err, result) {	
+			self.database.collection(self.collectionName).insertOne(doc, function(err, result) {	
+				
 				if(isEmpty(err)) {
 					doc.id = doc._id;
 					delete doc._id;
@@ -54,34 +57,44 @@ module.exports = function Model() {
 				else {
 					callback.call(this, null, err, err);
 				}
+
 			});
+
 		}
 		else {
+			
 			var err = new ada.restify.BadRequestError('Data validation failed');
 			err.body.details = self.documentError;
 			callback.call(this, err, err); 
+		
 		}
 
 	};
 
 	/*
-	 * Update a single document by its ID
-	 * Document must contain the ObjectID identified by the "id" key
+	 * Update a single document by its identifer
+	 * Document must contain the identifier key and value
 	 */
 	self.update = function(doc, callback) {
 
-		var objId = '';
-
-		try {
-			objId = ada.services.mongo.ObjectID(doc.id);
+		// Resolve identifier
+		var query = {};
+		if(self.identifier == 'id') {
+			var objId = '';
+			try {
+				objId = ada.services.mongo.ObjectID(doc.id);
+				{_id:objId}
+			}
+			catch(e) {
+				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+			}
 		}
-		catch(e) {
-			callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+		else {
+			query[self.identifier] = doc[self.identifier];
 		}
-
-		var payload = {};
 
 		// Cleanup document payload (delete keys not defined in the schema)
+		var payload = {};
 		for(var i=0; i<self.schema.length; i++) {
 			var index = self.schema[i].key;
 			if(!isEmpty(doc[index])) {
@@ -92,7 +105,7 @@ module.exports = function Model() {
 		//TODO: Model update: Validate payload
 		//TODO: Insert payload.updated_at
 
-		ada.services.mongo.db.collection(self.collectionName).update({_id:objId}, payload, function(err, result) {
+		self.database.collection(self.collectionName).update(query, payload, function(err, result) {
 			if(isEmpty(err)) {
 				callback.call(this, result, err);
 			}
@@ -104,29 +117,40 @@ module.exports = function Model() {
 	};
 
 	/*
-	 * Delete a single document by Object Id
+	 * Delete a single document by its identifier
 	 */
-	self.delete = function(objectId, callback) {
+	self.delete = function(id, callback) {
 
-		var objId = '';
-
-		try {
-			objId = ada.services.mongo.ObjectID(objectId);
+		// Resolve identifier
+		var query = {};
+		if(self.identifier == 'id') {
+			var objId = '';
+			try {
+				objId = ada.services.mongo.ObjectID(id);
+				{_id:objId}
+			}
+			catch(e) {
+				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+			}
 		}
-		catch(e) {
-			callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+		else {
+			query[self.identifier] = id;
 		}
 
-		ada.services.mongo.db.collection(self.collectionName).remove({_id:objId}, {justOne: true}, function(err, result) {
+		self.database.collection(self.collectionName).remove(query, {justOne: true}, function(err, result) {
+			
 			if(isEmpty(err)) {
+
 				callback.call(this, result, err);
+				
+				//TODO: Model delete: Cascade deletion
+
 			}
 			else {
 				callback.call(this, err, err);
 			}
+		
 		});
-
-		//TODO: Model delete: Cascade deletion
 
 	};
 
@@ -136,7 +160,7 @@ module.exports = function Model() {
 	 */
 	self.all = function(page, callback) {
 
-		var cursor = ada.services.mongo.db.collection(self.collectionName).find()
+		var cursor = self.database.collection(self.collectionName).find()
 			.skip(parseInt(getConfig('collection', 'pagesize'))*(parseInt(page)-1))
 			.limit(parseInt(getConfig('collection', 'pagesize')));
 
@@ -150,7 +174,7 @@ module.exports = function Model() {
 	 */
 	self.find = function(page, query, callback) {
 
-		var cursor = ada.services.mongo.db.collection(self.collectionName).find(query)
+		var cursor = self.database.collection(self.collectionName).find(query)
 			.skip(parseInt(getConfig('collection', 'pagesize'))*(parseInt(page)-1))
 			.limit(parseInt(getConfig('collection', 'pagesize')));
 
@@ -159,22 +183,27 @@ module.exports = function Model() {
 	};
 
 	/*
-	 * Retrieve a document from the collection by its Object Id
+	 * Retrieve a document from the collection by its identifier
 	 */
-	self.id = function(objectId, callback) {
+	self.id = function(id, callback) {
 
-		//TODO: Support configurable ID key
-
-		var objId = '';
-
-		try {
-			objId = ada.services.mongo.ObjectID(objectId);
+		// Resolve identifier
+		var query = {};
+		if(self.identifier == 'id') {
+			var objId = '';
+			try {
+				objId = ada.services.mongo.ObjectID(id);
+				{_id:objId}
+			}
+			catch(e) {
+				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+			}
 		}
-		catch(e) {
-			callback.call(this, {}, new ada.restify.ResourceNotFoundError('Document not found.'));
+		else {
+			query[self.identifier] = id;
 		}
 
-		ada.services.mongo.db.collection(self.collectionName).findOne({_id:objId}, function(err, document) {
+		self.database.collection(self.collectionName).findOne(query, function(err, document) {
 			self.hydrateOne(document, callback);
 		});
 		
@@ -185,10 +214,8 @@ module.exports = function Model() {
 	 */
 	self.findOne = function(query, callback) {
 
-		ada.services.mongo.db.collection(self.collectionName).findOne(query, function(err, document) {
-			
-			self.hydrateOne(document, callback);	
-			
+		self.database.collection(self.collectionName).findOne(query, function(err, document) {
+			self.hydrateOne(document, callback);				
 		});
 
 	};

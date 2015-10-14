@@ -54,7 +54,7 @@ Model definitions are located inside the `models` directory and each model shoul
       ];
 
       /* Optional */
-      self.identifier = "<String, Optional. Key name to be used as identifier if the model is using an identifier other than 'id'>";
+      self.identifier = "<String, Optional. Key name to be used as identifier if the model is using an identifier other than 'id'. A unique index will be automatically created for this key>";
 
       /* Optional */
       self.embed = {
@@ -79,20 +79,20 @@ Model definitions are located inside the `models` directory and each model shoul
 
 ### 1.2 Loading Models
 
-The `loadModel(model)` helper will return an instance of the model. The model  could be either of the following forms:
+The `loadModel(model)` helper will return an instance of the model. The model could be either of the following forms:
 
-* A string `<model_name>` which will be loaded from `./http/models`
-* An array `['<package_name>', '<model_name>']` which will be loaded from `./packages/<package_name>/models`
+* A string `<model_name>` which will be load `./http/models/<model_name>.js`
+* An array `['<package_name>', '<model_name>']` which will load `./packages/<package_name>/models/<model_name>.js`
 
 ### 1.3 Model Methods
 
 * **`all(page, callback)`** - List all documents in a page from a collection
 * **`create(document, callback)`** - Create a single document in the collection
-* **`delete(id, callback)`** - Remove a single document from the collection
+* **`delete(id, callback)`** - Remove a single document from the collection by its identifier
 * **`find(page, query, callback)`** - Query a collection in a page based on a query
 * **`findOne(query, callback)`** - Query a collection based on a query, expect one document
-* **`id(id, callback)`** - Retrieve a document from the collection by its id
-* **`update(document, callback)`** - Update a single document by its id
+* **`id(id, callback)`** - Retrieve a document from the collection by its identifier
+* **`update(document, callback)`** - Update a single document by its identifier
 
 ***
 
@@ -174,7 +174,7 @@ The route can also be combined with the pager to browse through filtered collect
 
 ### 2.3 Document Routing
 
-To enable document routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve a document based on the provided ID (`:id`). The `:id` is a required segment of the route.
+To enable document routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve a document based on the provided ID (`:id`). The `:id` is a required segment of the route - it will resolve to the key set as `identifier` in the model if it is set.
 
     {
       'route': '/<route_name>/:id',
@@ -256,7 +256,7 @@ For routes that insert a document in a collection, a reserved action name of `cr
 
 #### 2.4.2 Update Action
 
-For routes that edit a document in a collection, a reserved action name of `update` is available for the controller routing. This will update a document from the bound model after it has been validated using the model's schema constraints based on the provided ID (`:id`). Set the following values in the route definition (along with the other properties) to enable the controller/update action.The `:id` is a required segment of the route.
+For routes that edit a document in a collection, a reserved action name of `update` is available for the controller routing. This will update a document from the bound model after it has been validated using the model's schema constraints based on the provided ID (`:id`). Set the following values in the route definition (along with the other properties) to enable the controller/update action. The `:id` is a required segment of the route - it will resolve to the key set as `identifier` in the model if it is set.
 
     {
       'route': '/<route_name>/:id', 
@@ -269,7 +269,7 @@ For routes that edit a document in a collection, a reserved action name of `upda
 
 #### 2.4.3 Delete Action
 
-For routes that remove a document from a collection, a reserved action name of `delete` is available for the controller routing. This will delete a document from the bound model based on the provided ID (`:id`) and will cascade to related collections as well. Set the following values in the route definition (along with the other properties) to enable the controller/delete action.The `:id` is a required segment of the route.
+For routes that remove a document from a collection, a reserved action name of `delete` is available for the controller routing. This will delete a document from the bound model based on the provided ID (`:id`) and will cascade to related collections as well. Set the following values in the route definition (along with the other properties) to enable the controller/delete action.The `:id` is a required segment of the route - it will resolve to the key set as `identifier` in the model if it is set.
 
     {
       'route': '/<route_name>/:id', 
@@ -313,10 +313,10 @@ This tool will automatically generate a basic model definition based from the pr
 This tool will automatically generate a basic model definition based from the provided name and list of keys along with the following associated routes:
 
 * **`GET /<resources>`** - to retrieve the collection
-* **`GET /<resource>/:id`** - to retrieve a document
+* **`GET /<resource>/:id`** - to retrieve a document by its identifier
 * **`POST /<resource>`** - to create a document
-* **`PUT /<resource>/:id`** - to update a document
-* **`DELETE /<resource>/:id`** - to delete a document
+* **`PUT /<resource>/:id`** - to update a document by its identifier
+* **`DELETE /<resource>/:id`** - to delete a document by its identifier
 
 ### 6.3 Auto Generating Controllers
 
@@ -339,13 +339,6 @@ This tool will automatically generate a controller definition based from the pro
 
 ## 8. Under Development / Known Issues
 
-* Standardization of error responses for unique validation fails
-* Ensure data types for document create/update based on schema definition
-* Validation for presence of related collection on document create/update
-* Validation for document update
-* Cascade of delete
-* Implement scopes
-
 A list of things to do can be collected using the `todo` tool.
 
     npm run-script todo
@@ -361,5 +354,4 @@ Annotate the file line with a `//TODO: <description>` for it to display in the r
 A list of stuff that may be needed to improve the framework
 
 * Database abstraction
-* Package "namespacing"
 * Model, route, and controller modifier tool

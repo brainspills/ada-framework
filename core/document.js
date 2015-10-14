@@ -20,13 +20,12 @@ module.exports = function Document(request, response, model, embed) {
 
 			if(!isEmpty(self.embed)) {
 				
-				//TODO: Support multiple embeds
 				var embed_settings = self.model.embed[self.embed];
 				var embed = loadModel(embed_settings.model);
 				var page = isEmpty(self.request.params.page) ? 1 : self.request.params.page;
-				/*jshint -W061 */
-				eval('var query = {"'+embed_settings.key+'":"'+self.request.params.id+'"};');
-				/*jshint +W061 */
+
+				var query = {};
+				query[embed_settings.key] = self.request.params.id;
 
 				for(var index in self.request.params) {
 					if(index != 'page' && index != 'id') {
