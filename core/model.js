@@ -41,6 +41,9 @@ module.exports = function Model() {
 		if(self.isValidDocument(doc)) {
 			
  			doc._id = new ada.services.mongo.ObjectID();
+ 			
+ 			//TODO: Insert doc.created_at
+ 			//TODO: Insert doc.updated_at
 
 			ada.services.mongo.db.collection(self.collectionName).insertOne(doc, function(err, result) {	
 				if(isEmpty(err)) {
@@ -87,6 +90,7 @@ module.exports = function Model() {
 		}
 
 		//TODO: Model update: Validate payload
+		//TODO: Insert payload.updated_at
 
 		ada.services.mongo.db.collection(self.collectionName).update({_id:objId}, payload, function(err, result) {
 			if(isEmpty(err)) {

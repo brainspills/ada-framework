@@ -54,9 +54,12 @@ Model definitions are located inside the `models` directory and each model shoul
       ];
 
       /* Optional */
+      self.identifier = "<String, Optional. Key name to be used as identifier if the model is using an identifier other than 'id'>";
+
+      /* Optional */
       self.embed = {
         "<Embed Name>": {
-          "model": "<String, Required. Model name of the embeddable collection>",
+          "model": "<String or Array, Required. Model name of the embeddable collection>",
           "key": "<String, Required. Local key referencing foreign collection ID>"
         }
         ...

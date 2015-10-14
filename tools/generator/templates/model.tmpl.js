@@ -21,6 +21,9 @@ function <Name>() {
 <keys>
 	];
 
+	/** Set identifier key (primary) **/
+	// self.identifier = 'key';
+
 	/** Embeddable collections **/
 	/*
 	self.embed = {
