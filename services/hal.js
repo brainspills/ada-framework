@@ -2,7 +2,9 @@
  * @package	Ada Framework
  * @module	Services/Hal
  */
- var Hal = {
+
+
+var Hal = {
 
 	init : function() {
 
@@ -15,72 +17,46 @@
 		if(isEmpty(pre_path)) pre_path = '';
 		var base = pre_path+model.collectionURI;
 
-		var hal = {};
 		page = parseInt(page);
 		total = parseInt(total);
 		pagesize = parseInt(pagesize);
-		pages = parseInt(total/pagesize);
+		pages = Math.ceil(total/pagesize);
 
-		// Build _links
 		var page_url = '';
 		if(page != 1) {
 			page_url = '?page='+page;
 		}
 
-		var links = {
-			'self': {
-	            'href': base+page_url
-	        }
-        };
+		var hal = require('nor-hal');
+		var resource = new hal.Resource({
+			'count': collection.length,
+			'total': total 
+		}, base+page_url);
 
-        if(pages > 1) {
-        	links.first = {
-	    		'href': base
-	    	};
+		// Create Pager (_links)
+		if(pages > 1 && page != 1) {
+        	resource.link('first', base);
         }
-
-        if(page > 1) {
+        if(page > 1 && ((page-1) > 1)) {
         	if((page-1) > 1) {
-        		links.prev = {
-	        		'href': base+'?page='+(page-1)
-	        	};	
+        		resource.link('prev', base+'?page='+(page-1));
         	}
         	else {
-        		links.prev = {
-	        		'href': base
-	        	};
+        		resource.link('prev', base);
         	}
         }
-
         if((page+1) <= pages) {
-        	links.next = {
-        		'href': base+'?page='+(page+1)
-        	};
+        	resource.link('next', base+'?page='+(page+1));
         }
-
         if(page != pages && pages > 1) {
-        	links.last = {
-	    		'href': base+'?page='+pages
-	    	};	
+        	resource.link('last', base+'?page='+pages);
         }
-       
-        hal._links = links;
-
-        // Build count
-        hal.count = collection.length;
-        hal.total = total;
-
-        // Build _embedded 
-		var embedded = {};
-		embedded[model.collectionURI] = [];
-
-		for(var i=0; i<collection.length; i++) {
-			embedded[model.collectionURI].push(Hal.document(collection[i], model));
-		}
 		
-		hal._embedded = embedded;
+		for(var i=0; i<collection.length; i++) {
+			resource.embed(model.collectionURI, Hal.document(collection[i], model));
+		}
 
-		return hal;
+		return resource;
 
 	},
 
@@ -89,30 +65,20 @@
 		if(isEmpty(pre_path)) pre_path = '';
 		var base = pre_path+model.documentURI;
 		
-		var hal = {};
-
 		var identifier = (model.identifier == 'id') ? '_id' : model.identifier;
 
-		// Build _links
-		var links = {
-			'self': {
-	            'href': base+'/'+document[identifier]
-	        }
-        };
-
-        hal._links = links;
-
-        // Build id
-        hal.id = document._id;
-
-        // Build document
+		var keys = {};
+        keys.id = document._id;
 		delete document._id;
 
 		for(var key in document) {
-			hal[key] = document[key];
+			keys[key] = document[key];
 		}
 
-		return hal;
+		var hal = require('nor-hal');
+		var resource = new hal.Resource(keys, base+'/'+document[identifier]);
+
+		return resource;
 
 	}
 

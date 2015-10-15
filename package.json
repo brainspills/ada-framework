@@ -15,6 +15,7 @@
     "moment": "*",
     "mongodb": "~2.0",
     "morgan": "*",
+    "nor-hal": "*",
     "prompt-sync": "*",
     "restify": "3.x",
     "validate.js": "*"

@@ -156,8 +156,8 @@ module.exports = function Model() {
 	self.all = function(page, callback) {
 
 		var cursor = self.database.collection(self.collectionName).find()
-			.skip(parseInt(getConfig('collection', 'pagesize'))*(parseInt(page)-1))
-			.limit(parseInt(getConfig('collection', 'pagesize')));
+			.skip(parseInt(getConfig('collection', 'page_size'))*(parseInt(page)-1))
+			.limit(parseInt(getConfig('collection', 'page_size')));
 
 		self.hydrate(cursor, callback);
 
@@ -169,8 +169,8 @@ module.exports = function Model() {
 	self.find = function(page, query, callback) {
 
 		var cursor = self.database.collection(self.collectionName).find(query)
-			.skip(parseInt(getConfig('collection', 'pagesize'))*(parseInt(page)-1))
-			.limit(parseInt(getConfig('collection', 'pagesize')));
+			.skip(parseInt(getConfig('collection', 'page_size'))*(parseInt(page)-1))
+			.limit(parseInt(getConfig('collection', 'page_size')));
 
 		self.hydrate(cursor, callback);
 
@@ -225,7 +225,7 @@ module.exports = function Model() {
 			    	collection.push(self.removeHidden(doc));
 			    }
 			    else {
-			    	callback.call(this, collection, total, getConfig('collection', 'pagesize'));
+			    	callback.call(this, collection, total, getConfig('collection', 'page_size'));
 			    }
 		    });
 		});
