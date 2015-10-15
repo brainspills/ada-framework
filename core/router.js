@@ -120,53 +120,42 @@ var Router = {
 		var routes = [];
 
 		var fs = require('fs');
-		var routeFiles = fs.readdirSync(process.env.PWD+'/http/routes');
 
-		for(var i=0; i<routeFiles.length; i++) {
-			
-			var path = routeFiles[i];
-			var filename = path.replace(/^.*[\\\/]/, '');
-			var extension = filename.split('.').pop();
+		var paths = [];
+		var path = '';
+		paths.push(process.env.PWD+'/http/routes');
 
-			if(extension == 'js') {
-				var routeFile = require(process.env.PWD+'/http/routes/'+routeFiles[i]);
-				for(j=0; j<routeFile.length; j++) {
-					routes.push(routeFile[j]);	
-				}
-			}
-			
-		}
-
-		var packages = fs.readdirSync(process.env.PWD+'/packages');
-
-		/* jshint ignore:start */
-		for(i=0; i<packages.length; i++) {
-			
+		var packages = getConfig('server', 'packages');
+		for(var i=0; i<packages.length; i++) {
 			var package = packages[i];
-
-			if(fs.existsSync(process.env.PWD+'/packages/'+package+'/http/routes')) {
-
-				var routeFiles = fs.readdirSync(process.env.PWD+'/packages/'+package+'/http/routes');
-
-				for(var j=0; j<routeFiles.length; j++) {
+			path = process.env.PWD+'/packages/'+package+'/http/routes';
+			if(fs.existsSync(path)) {
+				paths.push(path);
+			}
+		}
+	
+		for(i=0; i<paths.length; i++) {
 			
-					var path = routeFiles[j];
-					var filename = path.replace(/^.*[\\\/]/, '');
-					var extension = filename.split('.').pop();
+			path = paths[i];
 
-					if(extension == 'js') {
-						var routeFile = require(process.env.PWD+'/packages/'+package+'/http/routes/'+routeFiles[j]);
-						for(k=0; k<routeFile.length; k++) {
-							routes.push(routeFile[k]);	
-						}
+			var routeFiles = fs.readdirSync(path);
+
+			for(var j=0; j<routeFiles.length; j++) {
+				
+				var routepath = routeFiles[j];
+				var filename = routepath.replace(/^.*[\\\/]/, '');
+				var extension = filename.split('.').pop();
+
+				if(extension == 'js') {
+					var routeFile = require(path+'/'+routeFiles[j]);
+					for(k=0; k<routeFile.length; k++) {
+						routes.push(routeFile[k]);	
 					}
-					
 				}
-			
+				
 			}
 
 		}
-		/* jshint ignore:end */
 
 		return routes;
 

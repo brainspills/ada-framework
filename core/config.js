@@ -13,43 +13,44 @@ var Config = {
 		require('dotenv').load();
 
 		var fs = require('fs');
-		var config_files = fs.readdirSync(process.env.PWD+'/config');
-		ada.config = {};
-		
-		for(var i=0; i<config_files.length; i++) {
-			var index = config_files[i];
-			index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
-			ada.config[index] = require(process.env.PWD+'/config/'+config_files[i]);
+
+		var paths = [];
+		var path = '';
+		paths.push(process.env.PWD+'/config');
+
+		var packages = require(process.env.PWD+'/config/server.js').packages;
+		for(var i=0; i<packages.length; i++) {
+			var package = packages[i];
+			require('util').log('Package enabled: ' + package);
+			path = process.env.PWD+'/packages/'+package+'/config';
+			if(fs.existsSync(path)) {
+				paths.push(path);
+			}
 		}
 
-		var packages = fs.readdirSync(process.env.PWD+'/packages');
+		ada.config = {};
 
-		//TODO: Namespace configs
+		for(i=0; i<paths.length; i++) {
 
-		/* jshint ignore:start */
-		for(i=0; i<packages.length; i++) {
+			path = paths[i];
+			var config_files = fs.readdirSync(path);
+			var services = {};
 			
-			var package = packages[i];
+			for(var j=0; j<config_files.length; j++) {
+				
+				var index = config_files[j];
+				var filename = index.replace(/^.*[\\\/]/, '');
+				var extension = filename.split('.').pop();
 
-			if(fs.existsSync(process.env.PWD+'/packages/'+package+'/config')) {
-
-				var configFiles = fs.readdirSync(process.env.PWD+'/packages/'+package+'/config');
-
-				for(var j=0; j<configFiles.length; j++) {
-			
-					for(var k=0; k<configFiles.length; k++) {
-						var index = configFiles[k];
-						index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
-						ada.config[index] = require(process.env.PWD+'/packages/'+package+'/config/'+configFiles[k]);
-					}
-					
+				if(extension == 'js') {
+					index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
+					ada.config[index] = require(path+'/'+config_files[j]);
 				}
-			
+
 			}
 
 		}
-		/* jshint ignore:end */
-		
+
 		// Create getConfig helper
 		global.getConfig = function(namespace, key) {
 

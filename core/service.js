@@ -7,45 +7,41 @@ module.exports = {
 	register : function() {
 
 		var fs = require('fs');
-		var service_files = fs.readdirSync(process.env.PWD+'/services');
 
 		var services = {};
-		
-		for(var i=0; i<service_files.length; i++) {
-			var index = service_files[i];
-			index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
-			services[index] = require(process.env.PWD+'/services/'+service_files[i]);
-			services[index].init();
+		var paths = [];
+		var path = '';
+		paths.push(process.env.PWD+'/services');
+
+		var packages = getConfig('server', 'packages');
+		for(var i=0; i<packages.length; i++) {
+			var package = packages[i];
+			path = process.env.PWD+'/packages/'+package+'/services';
+			if(fs.existsSync(path)) {
+				paths.push(path);
+			}
 		}
 
-		var packages = fs.readdirSync(process.env.PWD+'/packages');
+		for(i=0; i<paths.length; i++) {
 
-		//TODO: Namespace services
-
-		/* jshint ignore:start */
-		for(i=0; i<packages.length; i++) {
+			path = paths[i];
+			var service_files = fs.readdirSync(path);
 			
-			var package = packages[i];
+			for(var j=0; j<service_files.length; j++) {
+				
+				var index = service_files[j];
+				var filename = index.replace(/^.*[\\\/]/, '');
+				var extension = filename.split('.').pop();
 
-			if(fs.existsSync(process.env.PWD+'/packages/'+package+'/services')) {
-
-				var serviceFiles = fs.readdirSync(process.env.PWD+'/packages/'+package+'/services');
-
-				for(var j=0; j<serviceFiles.length; j++) {
-			
-					for(var k=0; k<serviceFiles.length; k++) {
-						var index = serviceFiles[k];
-						index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
-						services[index] = require(process.env.PWD+'/packages/'+package+'/services/'+serviceFiles[k]);
-						services[index].init();
-					}
-					
+				if(extension == 'js') {
+					index = index.substring(index.lastIndexOf('/')+1, index.lastIndexOf('.'));
+					services[index] = require(path+'/'+service_files[j]);
+					services[index].init();
 				}
-			
+
 			}
 
 		}
-		/* jshint ignore:end */
 
 		return services;
 
