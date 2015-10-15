@@ -25,6 +25,7 @@ module.exports = function Controller(request, response) {
 				self.response.send(err);
 			}
 			else {
+
 				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+doc[self.model.identifier]);
 				var body = {};
 				body.message = 'Document successfully created';
@@ -44,6 +45,7 @@ module.exports = function Controller(request, response) {
 				self.response.send(err);
 			}
 			else {
+
 				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+self.request.params.id);
 				self.response.send(200, {
 					'message': 'Document successfully updated.'
