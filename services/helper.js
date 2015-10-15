@@ -37,6 +37,14 @@
 
 		};
 
+		global.toHttpDateTime = function(utcStamp) {
+
+			// RFC 2616 = Day (small word), Date Month(small word) Year(full) Hours:Minutes:Seconds GMT
+			var moment = require('moment');
+			return moment.utc(utcStamp*1000).format('ddd, DD MMM YYYY HH:mm:ss') + ' GMT';
+
+		};
+
 		global.isEmpty = function(obj) {
 
 			if (typeof obj === 'undefined') return true;

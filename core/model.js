@@ -10,32 +10,6 @@ module.exports = function Model() {
 	self.mongo = ada.services.mongo;
 	self.database = self.mongo.db;
 
-	self.isValidDocument = function(doc) {
-
-		var constraints = {};
-
-		for(var i=0; i<self.schema.length; i++) {			
-			if(!isEmpty(self.schema[i].constraints)) {
-				constraints[self.schema[i].key] = self.schema[i].constraints;
-			}
-		}
-
-		var result = ada.services.validate.test(doc, constraints);
-
-		//TODO: Model payload validation: Validate uniqueness (return 409 as error)
-		//TODO: Model payload validation: Validate presence of related document in a collection (references)
-		//TODO: Model payload validation: Ensure datatypes
-
-		if(isEmpty(result)) {
-			return true;
-		}
-		else {
-			self.documentError = result;
-			return false;
-		}
-
-	};
-
 	/*
 	 * Create a single document in the collection
 	 */
@@ -255,6 +229,7 @@ module.exports = function Model() {
 			    }
 		    });
 		});
+		
 	};
 
 	/*
@@ -270,6 +245,32 @@ module.exports = function Model() {
 		}
 		else {
 			callback.call(this, self.removeHidden(document));	
+		}
+
+	};
+
+	self.isValidDocument = function(doc) {
+
+		var constraints = {};
+
+		for(var i=0; i<self.schema.length; i++) {			
+			if(!isEmpty(self.schema[i].constraints)) {
+				constraints[self.schema[i].key] = self.schema[i].constraints;
+			}
+		}
+
+		var result = ada.services.validate.test(doc, constraints);
+
+		//TODO: Model payload validation: Validate uniqueness (return 409 as error)
+		//TODO: Model payload validation: Validate presence of related document in a collection (references)
+		//TODO: Model payload validation: Ensure datatypes
+
+		if(isEmpty(result)) {
+			return true;
+		}
+		else {
+			self.documentError = result;
+			return false;
 		}
 
 	};

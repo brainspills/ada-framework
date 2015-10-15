@@ -46,7 +46,6 @@ module.exports = function Controller(request, response) {
 			}
 			else {
 
-				self.response.setHeader('Location', '/'+self.model.documentURI+'/'+self.request.params.id);
 				self.response.send(200, {
 					'message': 'Document successfully updated.'
 				});

@@ -44,6 +44,7 @@ module.exports = function Document(request, response, model, embed) {
 				   	out.total = emb_hal.total;
 				   	out._embedded = emb_hal._embedded;
 
+				   	self.response.setHeader('Last-Modified', toHttpDateTime(document.updated_at));
 				   	self.response.send(out);
 				
 				});
@@ -51,6 +52,7 @@ module.exports = function Document(request, response, model, embed) {
 			}
 			else {
 
+				self.response.setHeader('Last-Modified', toHttpDateTime(document.updated_at));
 				self.response.send(ada.services.hal.document(document, self.model));
 
 			}
