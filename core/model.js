@@ -91,7 +91,7 @@ module.exports = function Model() {
 		self.database.collection(self.collectionName).update(query, {$set: payload}, function(err, result) {
 			if(isEmpty(err)) {
 				
-				if(result.result.nModified == 0) {
+				if(result.result.nModified === 0) {
 					callback.call(this, 
 						new ada.restify.ResourceNotFoundError('Document not found.'), 
 						new ada.restify.ResourceNotFoundError('Document not found.')
@@ -130,7 +130,7 @@ module.exports = function Model() {
 			
 			if(isEmpty(err)) {
 
-				if(result.result.n == 0) {
+				if(result.result.n === 0) {
 					callback.call(this, 
 						new ada.restify.ResourceNotFoundError('Document not found.'), 
 						new ada.restify.ResourceNotFoundError('Document not found.')
