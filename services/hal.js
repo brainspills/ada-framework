@@ -91,10 +91,12 @@
 		
 		var hal = {};
 
+		var identifier = (model.identifier == 'id') ? '_id' : model.identifier;
+
 		// Build _links
 		var links = {
 			'self': {
-	            'href': base+'/'+document._id
+	            'href': base+'/'+document[identifier]
 	        }
         };
 

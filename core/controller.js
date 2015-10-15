@@ -38,7 +38,7 @@ module.exports = function Controller(request, response) {
 
 	self.update = function () {
 
-		self.model.update(self.request.params, function(result, err) {
+		self.model.update(self.request.params.id, self.request.params, function(result, err) {
 
 			if(!isEmpty(err)) {
 				self.response.send(err);

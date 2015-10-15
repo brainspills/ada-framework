@@ -31,6 +31,12 @@
 
 		};
 
+		global.getUTCStamp = function() {
+
+			return Math.floor((new Date()).getTime() / 1000);
+
+		};
+
 		global.isEmpty = function(obj) {
 
 			if (typeof obj === 'undefined') return true;

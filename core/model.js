@@ -45,13 +45,17 @@ module.exports = function Model() {
 
  			doc._id = new self.mongo.ObjectID();
  			
- 			//TODO: Insert doc.created_at
- 			//TODO: Insert doc.updated_at
+ 			// Create timestamps (UTC)
+ 			var stamp = getUTCStamp();
+ 			doc.created_at = stamp;
+ 			doc.updated_at = stamp;
 
 			self.database.collection(self.collectionName).insertOne(doc, function(err, result) {	
 				
 				if(isEmpty(err)) {
-					doc.id = doc._id;
+					if(self.identifier == 'id') {
+						doc.id = doc._id;
+					}
 					delete doc._id;
 					callback.call(this, doc, result, err);
 				}
@@ -74,22 +78,23 @@ module.exports = function Model() {
 
 	/*
 	 * Update a single document by its identifer
-	 * Document must contain the identifier key and value
 	 */
-	self.update = function(doc, callback) {
+	self.update = function(id, doc, callback) {
 
 		// Resolve identifier
 		var query = {};
+		var identifier = self.identifier;
 		if(self.identifier == 'id') {
 			try {
-				query = {_id:self.mongo.ObjectID(doc.id)};
+				identifier = '_id';
+				query = {_id:self.mongo.ObjectID(id)};
 			}
 			catch(e) {
 				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
 			}
 		}
 		else {
-			query[self.identifier] = doc[self.identifier];
+			query[self.identifier] = id;
 		}
 
 		// Cleanup document payload (delete keys not defined in the schema)
@@ -102,9 +107,14 @@ module.exports = function Model() {
 		}
 
 		//TODO: Model update: Validate payload
-		//TODO: Insert payload.updated_at
+		
+		// Insert updated_at timestamp (UTC)
+		payload.updated_at = getUTCStamp();
 
-		self.database.collection(self.collectionName).update(query, payload, function(err, result) {
+		// Remove identifier from the payload - to prevent accidental write of resource identifier
+		delete payload[identifier];
+
+		self.database.collection(self.collectionName).update(query, {$set: payload}, function(err, result) {
 			if(isEmpty(err)) {
 				callback.call(this, result, err);
 			}
@@ -153,7 +163,6 @@ module.exports = function Model() {
 
 	/*
 	 * List all documents in page from a collection
-	 * Page size determined from config: MONGO_PAGESIZE
 	 */
 	self.all = function(page, callback) {
 
@@ -167,7 +176,6 @@ module.exports = function Model() {
 
 	/*
 	 * Query a collection in a page based on a query
-	 * Page size determined from config: MONGO_PAGESIZE
 	 */
 	self.find = function(page, query, callback) {
 
@@ -254,6 +262,12 @@ module.exports = function Model() {
 	self.removeHidden = function(document) {
 
 		var removeKeys = [];
+		
+		// Remove _id if model has a custom indentifier
+		if(self.identifier != 'id') {
+			removeKeys.push('_id');
+		}
+
 		for(var i=0; i<self.schema.length; i++) {
 			if(self.schema[i].meta.hidden) {
 				removeKeys.push(self.schema[i].key);

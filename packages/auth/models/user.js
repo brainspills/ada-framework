@@ -90,9 +90,4 @@ function User() {
 User.prototype = Object.create(Model.prototype);
 User.prototype.constructor = Model;
 
-if(parseInt(getConfig('auth', 'enable')) == 1) {
-	module.exports = User;
-}
-else {
-	module.exports = null;
-}
+module.exports = User;

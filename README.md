@@ -92,7 +92,7 @@ The `loadModel(model)` helper will return an instance of the model. The model co
 * **`find(page, query, callback)`** - Query a collection in a page based on a query
 * **`findOne(query, callback)`** - Query a collection based on a query, expect one document
 * **`id(id, callback)`** - Retrieve a document from the collection by its identifier
-* **`update(document, callback)`** - Update a single document by its identifier
+* **`update(id, document, callback)`** - Update a single document by its identifier
 
 ***
 
@@ -331,6 +331,7 @@ This tool will automatically generate a controller definition based from the pro
 ## 7. Helpers
 
 * **`getConfig(namespace, key)`** - Returns a configuration value
+* **`getUTCStamp()`** - Returns the current timestamp in UTC
 * **`hash(string)`** - Returns a hashed form of a string. A key for hashing is set from `.env` using the `SERVER_KEY` key
 * **`isEmpty(object)`** - Tests the "emptiness" of a value. Returns `true` if the value is any of the following: `undefined`, `null`, `false`, `0`, zero length string or array, objects with no properties 
 * **`loadModel(model)`** - Returns a new instance of a model
