@@ -29,11 +29,7 @@ module.exports = function Model() {
 				self.database.collection(self.collectionName).insertOne(doc, function(err, result) {	
 					
 					if(isEmpty(err)) {
-						if(self.identifier == 'id') {
-							doc.id = doc._id;
-						}
-						delete doc._id;
-						callback.call(this, doc, result, err);
+						callback.call(this, self.removeHidden(doc), result, err);
 					}
 					else {
 						callback.call(this, null, err, err);
