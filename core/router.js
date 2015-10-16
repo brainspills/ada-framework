@@ -54,7 +54,7 @@ var Router = {
 					case 'document':
 
 						var Document = require(process.env.PWD+'/core/document.js');
-						var docunent = null;
+						var document = null;
 
 						if(isEmpty(route.binding.embed)) {
 							document = new Document(request, response, route.binding.model);	

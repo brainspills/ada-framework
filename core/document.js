@@ -38,11 +38,11 @@ module.exports = function Document(request, response, model, embed) {
 					var doc_hal = ada.services.hal.document(document, self.model);
 				   	var emb_hal = ada.services.hal.collection(collection, embed, page, total, pagesize, self.model.documentURI+'/'+self.request.params.id+'/');
 
-				   	var out = doc_hal;
-				   	out._links = emb_hal._links;
-				   	out.count = emb_hal.count;
-				   	out.total = emb_hal.total;
-				   	out._embedded = emb_hal._embedded;
+				   	var out = doc_hal._data;
+				   	out._links = emb_hal._data._links;
+				   	out.count = emb_hal._data.count;
+				   	out.total = emb_hal._data.total;
+				   	out._embedded = emb_hal._data._embedded;
 
 				   	self.response.setHeader('Last-Modified', toHttpDateTime(document.updated_at));
 				   	self.response.send(out);
