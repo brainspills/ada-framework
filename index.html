@@ -366,17 +366,99 @@
 <h2>
 <a id="3-authentication" class="anchor" href="#3-authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Authentication</h2>
 
-<p>An authentication package is enabled by default.</p>
+<p>An authentication package is enabled by default. The source files are located in <code>./packages/auth</code>.</p>
 
 <hr>
 
 <h2>
 <a id="4-hooks" class="anchor" href="#4-hooks" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Hooks</h2>
 
+<p>Execution hooks are pieces of logic that are executed in predefined areas of the application. </p>
+
+<h3>
+<a id="41-defining-hooks" class="anchor" href="#41-defining-hooks" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.1. Defining Hooks</h3>
+
+<p>Hooks are defined in <code>http/hooks.js</code>.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">module</span>.exports <span class="pl-k">=</span> [
+  {
+    <span class="pl-s"><span class="pl-pds">'</span>type<span class="pl-pds">'</span></span> <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;hook type&gt;<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span><span class="pl-en">callback</span><span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-k">function</span>(&lt;<span class="pl-smi">callback</span> <span class="pl-smi">arguments</span>&gt;) {
+      <span class="pl-c">/** Hook definition **/</span> 
+    }
+  }
+  ...
+];</pre></div>
+
+<h3>
+<a id="42-hook-types" class="anchor" href="#42-hook-types" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.2. Hook Types</h3>
+
+<table>
+<thead>
+<tr>
+<th>Hook Type</th>
+<th>Callback Arguments</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>preroute</code></strong></td>
+<td><code>route, request, response</code></td>
+<td>Happens just before the request is routed. Return <code>false</code> from the callback to cancel the routing.</td>
+</tr>
+</tbody>
+</table>
+
 <hr>
 
 <h2>
 <a id="5-packaging" class="anchor" href="#5-packaging" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. Packaging</h2>
+
+<p>The framework can be modularized by grouping related routes, controllers, models, hooks, services, and configs together in a package. Follow the following directory structure to create a package:</p>
+
+<pre><code>./
+ |
+ +-- packages/
+      |
+      +-- &lt;package_name&gt;
+           |
+           |-- config/
+           |    |
+           |    |-- &lt;config_file&gt;.js
+           |    +-- ...
+           |
+           |-- http/
+           |    |
+           |    |-- controllers/
+           |    |    | 
+           |    |    |-- &lt;controller_file&gt;.js
+           |    |    +-- ...
+           |    | 
+           |    |-- routes/
+           |    |    |
+           |    |    |-- &lt;route_file&gt;.js
+           |    |    +-- ...
+           |    |
+           |    +-- hooks.js
+           |
+           |-- models/
+           |    |
+           |    |-- &lt;model_file&gt;.js
+           |    +-- ...
+           |
+           +-- services/
+                |
+                |-- &lt;service_file&gt;.js
+                +-- ...
+</code></pre>
+
+<p>To enable the package, include it the <code>packages</code> array in <code>./config/app.js</code></p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> packages <span class="pl-k">=</span> [
+  <span class="pl-s"><span class="pl-pds">'</span>&lt;package_name&gt;<span class="pl-pds">'</span></span>,
+  ...
+]; </pre></div>
 
 <hr>
 
