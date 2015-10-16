@@ -366,7 +366,62 @@
 <h2>
 <a id="3-authentication" class="anchor" href="#3-authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Authentication</h2>
 
-<p>An authentication package is enabled by default. The source files are located in <code>./packages/auth</code>.</p>
+<p>An authentication package is enabled by default. The source files are located in <code>./packages/auth</code>. </p>
+
+<h3>
+<a id="31-configuring-the-auth-package" class="anchor" href="#31-configuring-the-auth-package" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1. Configuring the Auth Package</h3>
+
+<p>In the <code>.env</code> file, set the following keys:</p>
+
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>AUTH_LOGIN_PATH</code></strong></td>
+<td>URL to login API users (default: <code>auth/login</code>)</td>
+</tr>
+<tr>
+<td><strong><code>AUTH_REGISTER_PATH</code></strong></td>
+<td>URL to register API users (default: <code>auth/register</code>)</td>
+</tr>
+<tr>
+<td><strong><code>AUTH_MODEL</code></strong></td>
+<td>Model name to use for user lookup (default: <code>user</code> - located in <code>./packages/auth/models/user.js</code>)</td>
+</tr>
+<tr>
+<td><strong><code>AUTH_IDENTITY_KEY</code></strong></td>
+<td>Key to use to identify a user such as a username or an email (default: <code>email</code>)</td>
+</tr>
+<tr>
+<td><strong><code>AUTH_CREDENTIAL_KEY</code></strong></td>
+<td>Key to use as a credential for user trying to obtain an access token (default: <code>password</code>)</td>
+</tr>
+</tbody>
+</table>
+
+<h3>
+<a id="32-excluding-routes-from-authentication" class="anchor" href="#32-excluding-routes-from-authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2. Excluding Routes from Authentication</h3>
+
+<p>By default, all routes will need authentication. To exclude a route from authentication, add the following values in it's definition.</p>
+
+<div class="highlight highlight-source-js"><pre>{
+  <span class="pl-s"><span class="pl-pds">'</span>meta<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>noauth<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-c1">true</span>
+  }
+}</pre></div>
+
+<h3>
+<a id="33-obtaining-and-using-access-tokens-for-api-consumers" class="anchor" href="#33-obtaining-and-using-access-tokens-for-api-consumers" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3. Obtaining and Using Access Tokens (for API consumers)</h3>
+
+<p>After a user has successfully logged into the API through the set login path, the API will issue an access token (in JWT format) in its response. The token can now be used to authorize access to subsequent requests. The access token should be placed in the <code>Authorization</code> header of the request using the <code>bearer</code> authorization scheme.</p>
+
+<pre><code>Authorization: bearer &lt;access_token&gt;
+</code></pre>
 
 <hr>
 
