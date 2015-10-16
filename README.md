@@ -333,7 +333,7 @@ module.exports = [
 ### 4.2. Hook Types
 
 Hook Type   | Callback Arguments   | Description
---- | ---
+--- | --- | ---
 **`preroute`** | `route, request, response` | Happens just before the request is routed. Return `false` from the callback to cancel the routing.
 
 ***
