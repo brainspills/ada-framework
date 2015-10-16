@@ -306,15 +306,86 @@ For routes that remove a document from a collection, a reserved action name of `
 
 ## 3. Authentication
 
-An authentication package is enabled by default.
+An authentication package is enabled by default. The source files are located in `./packages/auth`.
 
 ***
 
 ## 4. Hooks
 
+Execution hooks are pieces of logic that are executed in predefined areas of the application. 
+
+### 4.1. Defining Hooks
+
+Hooks are defined in `http/hooks.js`.
+
+```javascript
+module.exports = [
+  {
+    'type' : '<hook type>',
+    'callback': function(<callback arguments>) {
+      /** Hook definition **/ 
+    }
+  }
+  ...
+];
+```
+
+### 4.2. Hook Types
+
+Hook Type   | Callback Arguments   | Description
+--- | ---
+**`preroute`** | `route, request, response` | Happens just before the request is routed. Return `false` from the callback to cancel the routing.
+
 ***
 
 ## 5. Packaging
+
+The framework can be modularized by grouping related routes, controllers, models, hooks, services, and configs together in a package. Follow the following directory structure for a package
+
+```
+./
+ |
+ +-- packages/
+      |
+      +-- <package_name>
+           |
+           |-- config/
+           |    |
+           |    |-- <config_file>.js
+           |    +-- ...
+           |
+           |-- http/
+           |    |
+           |    |-- controllers/
+           |    |    | 
+           |    |    |-- <controller_file>.js
+           |    |    +-- ...
+           |    | 
+           |    |-- routes/
+           |    |    |
+           |    |    |-- <route_file>.js
+           |    |    +-- ...
+           |    +-- hooks.js
+           |
+           |-- models/
+           |    |
+           |    |-- <model_file>.js
+           |    +-- ...
+           |
+           +-- services/
+                |
+                |-- <service_file>.js
+                +-- ...
+```
+
+To enable the package, include it the `packages` array in `./config/app.js`
+
+```javascript
+var packages = [
+  '<package_name>',
+  ...
+]; 
+```
 
 ***
 
