@@ -74,7 +74,7 @@ var Hal = {
 		}
 
 		var hal = require('nor-hal');
-		var resource = new hal.Resource(keys, base+'/'+key[model.identifier]);
+		var resource = new hal.Resource(keys, base+'/'+keys[model.identifier]);
 
 		return resource;
 
