@@ -7,8 +7,7 @@
 var packages = [
 	'auth',
 	'mongo',
-	'reference',
-	'blog'
+	'reference'
 ];
 
 module.exports = {
