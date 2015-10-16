@@ -29,6 +29,7 @@ module.exports = function Model() {
 				self.database.collection(self.collectionName).insertOne(doc, function(err, result) {	
 					
 					if(isEmpty(err)) {
+						doc.id = doc._id;
 						callback.call(this, self.removeHidden(doc), result, err);
 					}
 					else {
@@ -333,6 +334,7 @@ module.exports = function Model() {
 		// Remove _id if model has a custom indentifier
 		if(self.identifier != 'id') {
 			removeKeys.push('_id');
+			removeKeys.push('id');
 		}
 
 		for(var i=0; i<self.schema.length; i++) {
