@@ -26,56 +26,58 @@ Model definitions are located inside the `models` directory and each model shoul
 
 ### 1.1 Defining Models
 
-    var Model = extend('model');
+```javascript
+var Model = extend('model');
 
-    function <Model Name>() {
+function <Model Name>() {
 
-      var self = this;
-      Model.call(this);
+  var self = this;
+  Model.call(this);
 
-      self.collectionName = "<String, Required. Collection name in MongoDB>";
+  self.collectionName = "<String, Required. Collection name in MongoDB>";
 
-      self.collectionURI = "<String, Required. URL segment to attach in HAL links for collections>";
-      self.documentURI = "<String, Required. URL segment to attach in HAL links for documents>";
+  self.collectionURI = "<String, Required. URL segment to attach in HAL links for collections>";
+  self.documentURI = "<String, Required. URL segment to attach in HAL links for documents>";
 
-      self.schema = [
-        {
-          "key": "<String, Required. Field name in the collection>",
-          "reference": "<String, Optional. If the field is a reference to another collection, define the referenced collection here using its model name.>",
-          "constraints": {
-            <Object, Optional. Data validation definition. Refer to validate.js documentation.>
-          },
-          "meta": {
-            "label": "<String, Optional. Label of the field>",
-            "desc": "<String, Optional. Description of the field>"
-          }
-        }
-        ...
-      ];
-
-      /* Optional */
-      self.identifier = "<String, Optional. Key name to be used as identifier if the model is using an identifier other than 'id'. A unique index will be automatically created for this key>";
-
-      /* Optional */
-      self.embed = {
-        "<Embed Name>": {
-          "model": "<String or Array, Required. Model name of the embeddable collection>",
-          "key": "<String, Required. Local key referencing foreign collection ID>"
-        }
-        ...
-      };
-
-      /* Optional */
-      self.indeces = {
-        <Object, Optional. Indexing information of the collection. Refer to MongoDB documentation.>
-      };
-
+  self.schema = [
+    {
+      "key": "<String, Required. Field name in the collection>",
+      "reference": "<String, Optional. If the field is a reference to another collection, define the referenced collection here using its model name.>",
+      "constraints": {
+        <Object, Optional. Data validation definition. Refer to validate.js documentation.>
+      },
+      "meta": {
+        "label": "<String, Optional. Label of the field>",
+        "desc": "<String, Optional. Description of the field>"
+      }
     }
+    ...
+  ];
 
-    <Model Name>.prototype = Object.create(Model.prototype);
-    <Model Name>prototype.constructor = Model;
+  /* Optional */
+  self.identifier = "<String, Optional. Key name to be used as identifier if the model is using an identifier other than 'id'. A unique index will be automatically created for this key>";
 
-    module.exports = <Model Name>;
+  /* Optional */
+  self.embed = {
+    "<Embed Name>": {
+      "model": "<String or Array, Required. Model name of the embeddable collection>",
+      "key": "<String, Required. Local key referencing foreign collection ID>"
+    }
+    ...
+  };
+
+  /* Optional */
+  self.indeces = {
+    <Object, Optional. Indexing information of the collection. Refer to MongoDB documentation.>
+  };
+
+}
+
+<Model Name>.prototype = Object.create(Model.prototype);
+<Model Name>prototype.constructor = Model;
+
+module.exports = <Model Name>;
+```
 
 ### 1.2 Loading Models
 
@@ -102,58 +104,62 @@ Route definitions are located inside the `http/routes` directory.
 
 ### 2.1 Defining Routes
 
-    module.exports = [
-      {
-        "route": "<String, Required. Route URL. Refer to Restify documentation>",
-        "method": "<String, Required. HTTP method to use: "get", "post", "put", "delete">",
+```javascript
+module.exports = [
+  {
+    "route": "<String, Required. Route URL. Refer to Restify documentation>",
+    "method": "<String, Required. HTTP method to use: "get", "post", "put", "delete">",
 
-        "response": {
-          "type": "<String, Required. Type of response expected: "collection", "document", "controller">"
-        },
+    "response": {
+      "type": "<String, Required. Type of response expected: "collection", "document", "controller">"
+    },
 
-        /* Optional */
-        "request": {
-          "insert": {
-             "<Request parameter name>": "<String, Required. Type of value to be assigned: "auth.user.id">"
-             ...
-         } 
-        },
-		
-        "binding": {
-          "model": "<String or Array, Optional. Model name of which this route is attached. Required when response type is "collection" or "document". Also required when "binding.keys" is present>",
-          "controller": "<String or Array, Optional. Controller name of where the request is to be routed. Required when response type is "controller">",
-          "action": "<String, Optional. Action name of where the request is to be routed. Required when response type is controller. No need to define action if this is set to "create" or "update">",
-          "embed": "<String, Optional. Embed a related collection to the model retrieved. The reference is defined by the "embed" property of the model definition>"
-          "keys": [
-            <Array of Strings, Optional. List of keys that the route is expecting>
-          ]
-        },
+    /* Optional */
+    "request": {
+      "insert": {
+         "<Request parameter name>": "<String, Required. Type of value to be assigned: "auth.user.id">"
+         ...
+     } 
+    },
 
-        "meta": {
-          "desc": "<String, Optional. Description of the route. Will not be included in reference and browser if not set>",
-          "live": <Boolean, Required. Activate or deactivate a route>,
-          "noauth": <Boolean, Required. When set to false, the route will not require the Authorization credentials. Defaults to true>,
-          "scope": [
-            <Array of Strings, Optional. List of scope names that can access this route. Scope will be determined from the authorization credential>
-          ]
-        }
-      }
-      ...
-    ];
+    "binding": {
+      "model": "<String or Array, Optional. Model name of which this route is attached. Required when response type is "collection" or "document". Also required when "binding.keys" is present>",
+      "controller": "<String or Array, Optional. Controller name of where the request is to be routed. Required when response type is "controller">",
+      "action": "<String, Optional. Action name of where the request is to be routed. Required when response type is controller. No need to define action if this is set to "create" or "update">",
+      "embed": "<String, Optional. Embed a related collection to the model retrieved. The reference is defined by the "embed" property of the model definition>"
+      "keys": [
+        <Array of Strings, Optional. List of keys that the route is expecting>
+      ]
+    },
+
+    "meta": {
+      "desc": "<String, Optional. Description of the route. Will not be included in reference and browser if not set>",
+      "live": <Boolean, Required. Activate or deactivate a route>,
+      "noauth": <Boolean, Required. When set to false, the route will not require the Authorization credentials. Defaults to true>,
+      "scope": [
+        <Array of Strings, Optional. List of scope names that can access this route. Scope will be determined from the authorization credential>
+      ]
+    }
+  }
+  ...
+];
+```
 
 ### 2.2 Collection Routing
 
 To enable collection routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve documents (a collection) within the bound model.
 
-    {
-      'method': 'get',
-      'response': {
-        'type': 'collection'
-      },      
-      'binding': {
-        'model': '<model name>'
-      }
-    }
+```javascript
+{
+  'method': 'get',
+  'response': {
+    'type': 'collection'
+  },      
+  'binding': {
+    'model': '<model name>'
+  }
+}
+```
 
 #### 2.2.1. Pagination
 
@@ -176,27 +182,31 @@ The route can also be combined with the pager to browse through filtered collect
 
 To enable document routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve a document based on the provided ID (`:id`). The `:id` is a required segment of the route - it will resolve to the key set as `identifier` in the model if it is set.
 
-    {
-      'route': '/<route_name>/:id',
-      'method': 'get',
-      'response': {
-        'type': 'document'
-      },      
-      'binding': {
-        'model': '<model name>'
-      }
-    }
+```javascript
+{
+  'route': '/<route_name>/:id',
+  'method': 'get',
+  'response': {
+    'type': 'document'
+  },      
+  'binding': {
+    'model': '<model name>'
+  }
+}
+```
 
 #### 2.3.1. Embedding Related Collections
 
 To retrieve a document with an embedded related collection (one to many relation), set the following values in the route definition (along with the other properties). The value passed to the `binding.embed` key should match one of the embed keys defined in the parent model - defined in this route through `binding.model`.
 
-    {    
-      'binding': {
-        'model': '<model name>',
-        'embed': '<embed name>
-      }
-    }
+```javascript
+{    
+  'binding': {
+    'model': '<model name>',
+    'embed': '<embed name>
+  }
+}
+```
 
 Since a collection is also returned through the route, pagination and filters are automatically enabled as well.
 
@@ -206,79 +216,89 @@ Since a collection is also returned through the route, pagination and filters ar
 
 To route a request to a controller, set the following values in the route definition (along with the other properties). The value in the `binding.controller` property will have `./http/controllers` as its base path.
 
-    {
-      'response': {
-        'type': 'controller',
-      },
-      'binding': {
-         'controller': '<path/to/controller>',
-         'action': '<action name>'
-      }
-    }
+```javascript
+{
+  'response': {
+    'type': 'controller',
+  },
+  'binding': {
+     'controller': '<path/to/controller>',
+     'action': '<action name>'
+  }
+}
+```
 
 #### Defining Controllers
 
 Controller definitions are located inside the `http/controllers` directory and each controller should extend the core controller class (`./core/controller.js`).
 
-    var Controller = extend('controller');
+```javascript
+var Controller = extend('controller');
 
-    function <Controller Name>(request, response) {
+function <Controller Name>(request, response) {
 
-        var self = this;
+    var self = this;
 
-        Controller.call(this, request, response); 
+    Controller.call(this, request, response); 
 
-        self.<action name> = function() {
-          /** Action definition **/
-        };
+    self.<action name> = function() {
+      /** Action definition **/
+    };
 
-        ...
+    ...
 
-    }
+}
 
-    <Controller Name>.prototype = Object.create(Controller.prototype);
-    <Controller Name>.prototype.constructor = Controller;
+<Controller Name>.prototype = Object.create(Controller.prototype);
+<Controller Name>.prototype.constructor = Controller;
 
-    module.exports = <Controller Name>;
+module.exports = <Controller Name>;
+```
 
 #### 2.4.1 Create Action
 
 For routes that insert a document in a collection, a reserved action name of `create` is available for the controller routing. This will create a document in the bound model after it has been validated using the model's schema constraints. Set the following values in the route definition (along with the other properties) to enable the controller/create action.
 
-    {
-      'method': 'post',
-        'binding': {
-          'action': 'create',
-          'model': '<model name>' 
-        }
-      }
+```javascript
+{
+  'method': 'post',
+    'binding': {
+      'action': 'create',
+      'model': '<model name>' 
     }
+  }
+}
+```
 
 #### 2.4.2 Update Action
 
 For routes that edit a document in a collection, a reserved action name of `update` is available for the controller routing. This will update a document from the bound model after it has been validated using the model's schema constraints based on the provided ID (`:id`). Set the following values in the route definition (along with the other properties) to enable the controller/update action. The `:id` is a required segment of the route - it will resolve to the key set as `identifier` in the model if it is set.
 
-    {
-      'route': '/<route_name>/:id', 
-      'method': 'put',
-      'binding': {
-        'action': 'update',
-        'model': '<model name>' 
-      }
-    }
+```javascript
+{
+  'route': '/<route_name>/:id', 
+  'method': 'put',
+  'binding': {
+    'action': 'update',
+    'model': '<model name>' 
+  }
+}
+```
 
 #### 2.4.3 Delete Action
 
 For routes that remove a document from a collection, a reserved action name of `delete` is available for the controller routing. This will delete a document from the bound model based on the provided ID (`:id`) and will cascade to related collections as well. Set the following values in the route definition (along with the other properties) to enable the controller/delete action.The `:id` is a required segment of the route - it will resolve to the key set as `identifier` in the model if it is set.
 
-    {
-      'route': '/<route_name>/:id', 
-      'method': 'delete',
-      'binding': {
-        'action': 'delete',
-        'model': '<model name>' 
-      }
-    }
+```javascript
+{
+  'route': '/<route_name>/:id', 
+  'method': 'delete',
+  'binding': {
+    'action': 'delete',
+    'model': '<model name>' 
+  }
+}
+```
 
 ***
 
