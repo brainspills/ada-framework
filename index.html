@@ -24,19 +24,23 @@
 
 <p><a href="https://travis-ci.org/brainspills/ada-framework"><img src="https://travis-ci.org/brainspills/ada-framework.svg?branch=master" alt="Build Status"></a></p>
 
-<p><strong>Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.</strong></p>
+<h4>
+<a id="ada-is-an-api-development-framework-written-in-nodejs-and-restify-aimed-to-help-developers-build-a-standard-rest-api" class="anchor" href="#ada-is-an-api-development-framework-written-in-nodejs-and-restify-aimed-to-help-developers-build-a-standard-rest-api" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.</strong>
+</h4>
 
 <p>Ada framework aims to minimize coding by providing flexible functionality through configuration and definition. A REST API is basically a provider of resources (abstracted as models) through client requests (determined through routes). The framework heavily depends on model and route definitions to complete a client request.</p>
 
 <p>For any request, the API returns any of the 3 basic types of responses: <code>collection</code>, <code>document</code>, and <code>controller</code>. <code>GET</code> requests are routed to either a collection or a document. <code>POST</code> and <code>PUT</code> requests which may require some additional logic are routed to controllers. The logic maybe defined within these controllers.</p>
 
+<blockquote>
 <p><em>The API has an auto generated reference through its base URL (<code>/</code>) and can be interacted with from an API browser at <code>/browser</code>.</em></p>
+</blockquote>
 
 <p><strong>Requirements</strong></p>
 
 <ul>
-<li>NodeJS</li>
-<li>MongoDB</li>
+<li><a href="https://nodejs.org/">NodeJS</a></li>
+<li><a href="https://www.mongodb.org/">MongoDB</a></li>
 </ul>
 
 <p><strong>Installation</strong></p>
@@ -117,22 +121,44 @@
 <h3>
 <a id="13-model-methods" class="anchor" href="#13-model-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.3 Model Methods</h3>
 
-<ul>
-<li>
-<strong><code>all(page, callback)</code></strong> - List all documents in a page from a collection</li>
-<li>
-<strong><code>create(document, callback)</code></strong> - Create a single document in the collection</li>
-<li>
-<strong><code>delete(id, callback)</code></strong> - Remove a single document from the collection by its identifier</li>
-<li>
-<strong><code>find(page, query, callback)</code></strong> - Query a collection in a page based on a query</li>
-<li>
-<strong><code>findOne(query, callback)</code></strong> - Query a collection based on a query, expect one document</li>
-<li>
-<strong><code>id(id, callback)</code></strong> - Retrieve a document from the collection by its identifier</li>
-<li>
-<strong><code>update(id, document, callback)</code></strong> - Update a single document by its identifier</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Method Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>all(page, callback)</code></strong></td>
+<td>List all documents in a page from a collection</td>
+</tr>
+<tr>
+<td><strong><code>create(document, callback)</code></strong></td>
+<td>Create a single document in the collection</td>
+</tr>
+<tr>
+<td><strong><code>delete(id, callback)</code></strong></td>
+<td>Remove a single document from the collection by its identifier</td>
+</tr>
+<tr>
+<td><strong><code>find(page, query, callback)</code></strong></td>
+<td>Query a collection in a page based on a query</td>
+</tr>
+<tr>
+<td><strong><code>findOne(query, callback)</code></strong></td>
+<td>Query a collection based on a query, expect one document</td>
+</tr>
+<tr>
+<td><strong><code>id(id, callback)</code></strong></td>
+<td>Retrieve a document from the collection by its identifier</td>
+</tr>
+<tr>
+<td><strong><code>update(id, document, callback)</code></strong></td>
+<td>Update a single document by its identifier</td>
+</tr>
+</tbody>
+</table>
 
 <hr>
 
@@ -340,6 +366,8 @@
 <h2>
 <a id="3-authentication" class="anchor" href="#3-authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Authentication</h2>
 
+<p>An authentication package is enabled by default.</p>
+
 <hr>
 
 <h2>
@@ -375,18 +403,36 @@ node tools/generate resource &lt;resource name&gt; &lt;comma separated list of k
 
 <p>This tool will automatically generate a basic model definition based from the provided name and list of keys along with the following associated routes:</p>
 
-<ul>
-<li>
-<strong><code>GET /&lt;resources&gt;</code></strong> - to retrieve the collection</li>
-<li>
-<strong><code>GET /&lt;resource&gt;/:id</code></strong> - to retrieve a document by its identifier</li>
-<li>
-<strong><code>POST /&lt;resource&gt;</code></strong> - to create a document</li>
-<li>
-<strong><code>PUT /&lt;resource&gt;/:id</code></strong> - to update a document by its identifier</li>
-<li>
-<strong><code>DELETE /&lt;resource&gt;/:id</code></strong> - to delete a document by its identifier</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>GET /&lt;resources&gt;</code></strong></td>
+<td>to retrieve the collection</td>
+</tr>
+<tr>
+<td><strong><code>GET /&lt;resource&gt;/:id</code></strong></td>
+<td>to retrieve a document by its identifier</td>
+</tr>
+<tr>
+<td><strong><code>POST /&lt;resource&gt;</code></strong></td>
+<td>to create a document</td>
+</tr>
+<tr>
+<td><strong><code>PUT /&lt;resource&gt;/:id</code></strong></td>
+<td>to update a document by its identifier</td>
+</tr>
+<tr>
+<td><strong><code>DELETE /&lt;resource&gt;/:id</code></strong></td>
+<td>to delete a document by its identifier</td>
+</tr>
+</tbody>
+</table>
 
 <h3>
 <a id="63-auto-generating-controllers" class="anchor" href="#63-auto-generating-controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>6.3 Auto Generating Controllers</h3>
@@ -403,18 +449,40 @@ node tools/generate controller &lt;controller name&gt; &lt;comma separated list 
 <h2>
 <a id="7-helpers" class="anchor" href="#7-helpers" aria-hidden="true"><span class="octicon octicon-link"></span></a>7. Helpers</h2>
 
-<ul>
-<li>
-<strong><code>getConfig(namespace, key)</code></strong> - Returns a configuration value</li>
-<li>
-<strong><code>getUTCStamp()</code></strong> - Returns the current timestamp in UTC</li>
-<li>
-<strong><code>hash(string)</code></strong> - Returns a hashed form of a string. A key for hashing is set from <code>.env</code> using the <code>SERVER_KEY</code> key</li>
-<li>
-<strong><code>isEmpty(object)</code></strong> - Tests the "emptiness" of a value. Returns <code>true</code> if the value is any of the following: <code>undefined</code>, <code>null</code>, <code>false</code>, <code>0</code>, zero length string or array, objects with no properties </li>
-<li>
-<strong><code>loadModel(model)</code></strong> - Returns a new instance of a model</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>getConfig(namespace, key)</code></strong></td>
+<td>Returns a configuration value</td>
+</tr>
+<tr>
+<td><strong><code>getUTCStamp()</code></strong></td>
+<td>Returns the current timestamp in UTC</td>
+</tr>
+<tr>
+<td><strong><code>hash(string)</code></strong></td>
+<td>Returns a hashed form of a string. A key for hashing is set from <code>.env</code> using the <code>APP_KEY</code> key</td>
+</tr>
+<tr>
+<td><strong><code>isEmpty(object)</code></strong></td>
+<td>Tests the "emptiness" of a value. Returns <code>true</code> if the value is any of the following: <code>undefined</code>, <code>null</code>, <code>false</code>, <code>0</code>, zero length string or array, objects with no properties</td>
+</tr>
+<tr>
+<td><strong><code>loadModel(model)</code></strong></td>
+<td>Returns a new instance of a model</td>
+</tr>
+<tr>
+<td><strong><code>toHttpDateTime(timestamp)</code></strong></td>
+<td>Returns a date and time string from a timestamp in RFC 2616 format</td>
+</tr>
+</tbody>
+</table>
 
 <hr>
 
