@@ -340,7 +340,7 @@ Hook Type   | Callback Arguments   | Description
 
 ## 5. Packaging
 
-The framework can be modularized by grouping related routes, controllers, models, hooks, services, and configs together in a package. Follow the following directory structure for a package
+The framework can be modularized by grouping related routes, controllers, models, hooks, services, and configs together in a package. Follow the following directory structure to create a package:
 
 ```
 ./
