@@ -51,7 +51,7 @@ function Auth(request, response) {
 			self.request.params.password = hash(self.request.params.password);	
 		}
 		
-		self.model.create(self.request.params, function(result, err){
+		self.model.create(self.request.params, function(doc, result, err){
 			if(!isEmpty(err)) {
 				self.response.send(err);
 			}
