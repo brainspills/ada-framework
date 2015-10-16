@@ -306,7 +306,37 @@ For routes that remove a document from a collection, a reserved action name of `
 
 ## 3. Authentication
 
-An authentication package is enabled by default. The source files are located in `./packages/auth`.
+An authentication package is enabled by default. The source files are located in `./packages/auth`. 
+
+### 3.1. Configuring the Auth Package
+
+In the `.env` file, set the following keys:
+
+Key   | Description
+--- | ---
+**`AUTH_LOGIN_PATH`** | URL to login API users (default: `auth/login`)
+**`AUTH_REGISTER_PATH`** | URL to register API users (default: `auth/register`)
+**`AUTH_MODEL`** | Model name to use for user lookup (default: `user` - located in `./packages/auth/models/user.js`)
+**`AUTH_IDENTITY_KEY`** | Key to use to identify a user such as a username or an email (default: `email`)
+**`AUTH_CREDENTIAL_KEY`** | Key to use as a credential for user trying to obtain an access token (default: `password`)
+
+### 3.3. Excluding Routes from Authentication
+
+By default, all routes will need authentication. To exclude a route from authentication, add the following values in it's definition.
+
+```javascript
+{
+  'meta': {
+    'noauth': true
+  }
+}
+```
+
+### 3.3. Obtaining and Using Access Tokens (for API consumers)
+
+After a user has successfully logged into the API through the set login path, the API will issue an access token (in JWT format) in its response. The token can now be used to authorize access to subsequent requests. The access token should be placed in the `Authorization` header of the request using the `bearer` authorization scheme.
+
+    Authorization: bearer <access_token>
 
 ***
 
