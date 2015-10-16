@@ -13,8 +13,8 @@ For any request, the API returns any of the 3 basic types of responses: `collect
 > _The API has an auto generated reference through its base URL (`/`) and can be interacted with from an API browser at `/browser`._
 
 **Requirements**
-* NodeJS
-* MongoDB
+* [NodeJS](https://nodejs.org/)
+* [MongoDB](https://www.mongodb.org/)
 
 **Installation**
 
