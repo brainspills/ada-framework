@@ -365,6 +365,7 @@ The framework can be modularized by grouping related routes, controllers, models
            |    |    |
            |    |    |-- <route_file>.js
            |    |    +-- ...
+           |    |
            |    +-- hooks.js
            |
            |-- models/
