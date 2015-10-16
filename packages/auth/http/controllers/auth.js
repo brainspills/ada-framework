@@ -54,8 +54,12 @@ function Auth(request, response) {
 		self.model.create(self.request.params, function(result, err){
 			if(!isEmpty(err)) {
 				self.response.send(err);
-			} else {
-				self.response.send(result);		
+			}
+			else {
+				var body = {};
+				body.message = 'User created';
+				body[self.model.documentURI] = doc;
+				self.response.send(201, body);
 			}
 		});
 
