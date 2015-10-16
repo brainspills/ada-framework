@@ -320,7 +320,7 @@ Key   | Description
 **`AUTH_IDENTITY_KEY`** | Key to use to identify a user such as a username or an email (default: `email`)
 **`AUTH_CREDENTIAL_KEY`** | Key to use as a credential for user trying to obtain an access token (default: `password`)
 
-### 3.3. Excluding Routes from Authentication
+### 3.2. Excluding Routes from Authentication
 
 By default, all routes will need authentication. To exclude a route from authentication, add the following values in it's definition.
 
