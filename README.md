@@ -203,7 +203,7 @@ To retrieve a document with an embedded related collection (one to many relation
 {    
   'binding': {
     'model': '<model name>',
-    'embed': '<embed name>
+    'embed': '<embed name>'
   }
 }
 ```
