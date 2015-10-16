@@ -22,12 +22,9 @@ module.exports = [
 				}
 
 			}
-			else {
 
-				return true;
+			return true;
 			
-			}
-
 		}
 
 	}
