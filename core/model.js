@@ -271,7 +271,7 @@ module.exports = function Model() {
 			var keys = self.getUniqueKeys();
 			var query = {$or:[]};
 
-			for(var i=0; i<keys.length; i++) {
+			for(i=0; i<keys.length; i++) {
 				var criteria = {};
 				criteria[keys[i]] = doc[keys[i]];
 				query.$or.push(criteria);
@@ -284,7 +284,7 @@ module.exports = function Model() {
 					cb.call(this, true, null);	
 				}
 				else {
-					var err = new ada.restify.ConflictError('Data validation failed');
+					err = new ada.restify.ConflictError('Data validation failed');
 					var details = {};
 					for(i=0; i<keys.length; i++) {
 						if(doc[keys[i]] == document[keys[i]]) {
