@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/brainspills/ada-framework.svg?branch=master)](https://travis-ci.org/brainspills/ada-framework)
 
-**Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.**
+#### **Ada is an API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.**
 
 Ada framework aims to minimize coding by providing flexible functionality through configuration and definition. A REST API is basically a provider of resources (abstracted as models) through client requests (determined through routes). The framework heavily depends on model and route definitions to complete a client request.
 
@@ -10,7 +10,7 @@ Ada framework aims to minimize coding by providing flexible functionality throug
 For any request, the API returns any of the 3 basic types of responses: `collection`, `document`, and `controller`. `GET` requests are routed to either a collection or a document. `POST` and `PUT` requests which may require some additional logic are routed to controllers. The logic maybe defined within these controllers.
 
 
-_The API has an auto generated reference through its base URL (`/`) and can be interacted with from an API browser at `/browser`._
+> _The API has an auto generated reference through its base URL (`/`) and can be interacted with from an API browser at `/browser`._
 
 **Requirements**
 * NodeJS
@@ -304,6 +304,8 @@ For routes that remove a document from a collection, a reserved action name of `
 
 ## 3. Authentication
 
+An authentication package is enabled by default.
+
 ***
 
 ## 4. Hooks
@@ -355,6 +357,7 @@ This tool will automatically generate a controller definition based from the pro
 * **`hash(string)`** - Returns a hashed form of a string. A key for hashing is set from `.env` using the `SERVER_KEY` key
 * **`isEmpty(object)`** - Tests the "emptiness" of a value. Returns `true` if the value is any of the following: `undefined`, `null`, `false`, `0`, zero length string or array, objects with no properties 
 * **`loadModel(model)`** - Returns a new instance of a model
+* **`toHttpDateTime(timestamp)`** - Returns a date and time string from a timestamp in RFC 2616 format
 
 *** 
 
