@@ -65,8 +65,6 @@ var Hal = {
 		if(isEmpty(pre_path)) pre_path = '';
 		var base = pre_path+model.documentURI;
 		
-		var identifier = (model.identifier == 'id') ? '_id' : model.identifier;
-
 		var keys = {};
         keys.id = document._id;
 		delete document._id;
@@ -76,7 +74,7 @@ var Hal = {
 		}
 
 		var hal = require('nor-hal');
-		var resource = new hal.Resource(keys, base+'/'+document[identifier]);
+		var resource = new hal.Resource(keys, base+'/'+document[model.identifier]);
 
 		return resource;
 
