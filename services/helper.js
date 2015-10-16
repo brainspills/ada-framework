@@ -64,7 +64,7 @@
 
 			var HmacSHA1 = require('crypto-js/hmac-sha1');
 			var EncBase64 = require('crypto-js/enc-base64');
-			return HmacSHA1(string, getConfig('server', 'key')).toString(EncBase64);
+			return HmacSHA1(string, getConfig('app', 'key')).toString(EncBase64);
 
 		};
 

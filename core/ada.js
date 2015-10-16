@@ -17,7 +17,6 @@ module.exports = function Ada() {
 
 		// Create Server
 		self.restify = require('restify');
-		var morgan = require('morgan');
 		self.server = self.restify.createServer({
 			name: getConfig('server', 'name'),
 			formatters: {
@@ -29,8 +28,13 @@ module.exports = function Ada() {
 		self.server.use(self.restify.authorizationParser());
 		self.server.use(self.restify.queryParser());
 		self.server.use(self.restify.bodyParser());
-		self.server.use(morgan('dev'));
 
+		if(parseInt(getConfig('app', 'debug')) == 1) {
+			require('util').log('Debug: Debugging enabled');
+			var morgan = require('morgan');
+			self.server.use(morgan('dev'));	
+		}
+		
 		// Register Routes
 		self.routes = require(process.env.PWD+'/core/router.js').register(self.server);
 		
@@ -43,6 +47,14 @@ module.exports = function Ada() {
 		self.server.listen(getConfig('server', 'port'), function() {
 
 			require('util').log('Server: ' + getConfig('server', 'name') + ' listening on port ' + getConfig('server', 'port'));
+
+		});
+
+		self.server.on('uncaughtException', function(request, response, route, error) {
+
+			console.log(error.stack);
+
+			response.send(error);
 
 		});
 

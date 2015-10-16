@@ -6,47 +6,49 @@ module.exports = function Model() {
 
 	self = this;
 	self.identifier = 'id';
-	self.documentError = {};
 	self.mongo = ada.services.mongo;
 	self.database = self.mongo.db;
+	self.checked = false;
 
 	/*
 	 * Create a single document in the collection
 	 */
 	self.create = function(doc, callback) {
 
-		if(self.isValidDocument(doc)) {
+		self.isValidDocument(doc, function(valid, err) {
 
- 			doc._id = new self.mongo.ObjectID();
- 			
- 			// Create timestamps (UTC)
- 			var stamp = getUTCStamp();
- 			doc.created_at = stamp;
- 			doc.updated_at = stamp;
+			if(valid) {
 
-			self.database.collection(self.collectionName).insertOne(doc, function(err, result) {	
-				
-				if(isEmpty(err)) {
-					if(self.identifier == 'id') {
-						doc.id = doc._id;
+	 			doc._id = new self.mongo.ObjectID();
+	 			
+	 			// Create timestamps (UTC)
+	 			var stamp = getUTCStamp();
+	 			doc.created_at = stamp;
+	 			doc.updated_at = stamp;
+
+				self.database.collection(self.collectionName).insertOne(doc, function(err, result) {	
+					
+					if(isEmpty(err)) {
+						if(self.identifier == 'id') {
+							doc.id = doc._id;
+						}
+						delete doc._id;
+						callback.call(this, doc, result, err);
 					}
-					delete doc._id;
-					callback.call(this, doc, result, err);
-				}
-				else {
-					callback.call(this, null, err, err);
-				}
+					else {
+						callback.call(this, null, err, err);
+					}
 
-			});
+				});
 
-		}
-		else {
+			}
+			else {
+				
+				callback.call(this, err, err); 
 			
-			var err = new ada.restify.BadRequestError('Data validation failed');
-			err.body.details = self.documentError;
-			callback.call(this, err, err); 
-		
-		}
+			}
+
+		});
 
 	};
 
@@ -249,7 +251,7 @@ module.exports = function Model() {
 
 	};
 
-	self.isValidDocument = function(doc) {
+	self.isValidDocument = function(doc, cb) {
 
 		var constraints = {};
 
@@ -259,19 +261,72 @@ module.exports = function Model() {
 			}
 		}
 
-		var result = ada.services.validate.test(doc, constraints);
-
-		//TODO: Model payload validation: Validate uniqueness (return 409 as error)
-		//TODO: Model payload validation: Validate presence of related document in a collection (references)
 		//TODO: Model payload validation: Ensure datatypes
 
+		var result = ada.services.validate.test(doc, constraints);
+
 		if(isEmpty(result)) {
-			return true;
+		
+			// Validate uniqueness (return 409 as error)
+			var keys = self.getUniqueKeys();
+			var query = {$or:[]};
+
+			for(var i=0; i<keys.length; i++) {
+				var criteria = {};
+				criteria[keys[i]] = doc[keys[i]];
+				query.$or.push(criteria);
+			}
+
+			//TODO: Model payload validation: Validate presence of related document in a collection (references)
+
+			self.database.collection(self.collectionName).findOne(query, function(err, document) {
+				if(isEmpty(document)) {
+					cb.call(this, true, null);	
+				}
+				else {
+					var err = new ada.restify.ConflictError('Data validation failed');
+					var details = {};
+					for(i=0; i<keys.length; i++) {
+						if(doc[keys[i]] == document[keys[i]]) {
+							details[keys[i]] = [keys[i] + ' must be unique'];
+						}
+					}
+					err.body.details = details;
+					cb.call(this, false, err);
+				}
+								
+			});
+		
 		}
 		else {
-			self.documentError = result;
-			return false;
+			var err = new ada.restify.BadRequestError('Data validation failed');
+			err.body.details = result;
+			cb.call(this, false, err);
 		}
+
+	};
+
+	self.getUniqueKeys = function() {
+
+		var unique = [];
+
+		if(self.identifier != 'id') {
+			unique.push(self.identifier);
+		}
+
+		if(!isEmpty(self.indeces)) {
+			for(var index in self.indeces) {
+				if(self.indeces[index].options.unique == 1) {
+					for(var key in self.indeces[index].fields) {
+						if(self.indeces[index].fields[key] == 1) {
+							unique.push(key);
+						}
+					}
+				}
+			}
+		}
+
+		return unique;
 
 	};
 

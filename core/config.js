@@ -18,7 +18,7 @@ var Config = {
 		var path = '';
 		paths.push(process.env.PWD+'/config');
 
-		var packages = require(process.env.PWD+'/config/server.js').packages;
+		var packages = require(process.env.PWD+'/config/app.js').packages;
 		for(var i=0; i<packages.length; i++) {
 			var package = packages[i];
 			require('util').log('Package enabled: ' + package);
@@ -140,7 +140,7 @@ var Config = {
 
 		// Write configuration
 		if(writeConfig) {
-			require('util').log("\nWriting configuration");
+			require('util').log("Writing configuration");
 			var content = '';
 			for(var index in keys) {
 				content += index+'='+keys[index]+"\n";	

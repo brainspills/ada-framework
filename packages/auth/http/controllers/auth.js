@@ -52,7 +52,11 @@ function Auth(request, response) {
 		}
 		
 		self.model.create(self.request.params, function(result, err){
-		 	self.response.send(result);	
+			if(!isEmpty(err)) {
+				self.response.send(err);
+			} else {
+				self.response.send(result);		
+			}
 		});
 
     };

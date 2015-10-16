@@ -12,7 +12,7 @@
 
 		require('util').log('JWT: Intializing JWT service...');
 
-		JWT.key = getConfig('server', 'key');
+		JWT.key = getConfig('app', 'key');
 		JWT.exp = parseInt(getConfig('jwt', 'exp'));
 		JWT.jwt = require('jsonwebtoken');
 
