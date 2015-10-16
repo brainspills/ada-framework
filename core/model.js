@@ -30,6 +30,7 @@ module.exports = function Model() {
 					
 					if(isEmpty(err)) {
 						doc.id = doc._id;
+						delete doc._id;
 						callback.call(this, self.removeHidden(doc), result, err);
 					}
 					else {
