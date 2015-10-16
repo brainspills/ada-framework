@@ -83,7 +83,7 @@ module.exports = <Model Name>;
 
 The `loadModel(model)` helper will return an instance of the model. The model could be either of the following forms:
 
-* A string `<model_name>` which will be load `./http/models/<model_name>.js`
+* A string `<model_name>` which will load `./http/models/<model_name>.js`
 * An array `['<package_name>', '<model_name>']` which will load `./packages/<package_name>/models/<model_name>.js`
 
 ### 1.3 Model Methods
