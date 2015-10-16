@@ -51,59 +51,68 @@
 <h3>
 <a id="11-defining-models" class="anchor" href="#11-defining-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.1 Defining Models</h3>
 
-<pre><code>var Model = extend('model');
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> Model <span class="pl-k">=</span> extend(<span class="pl-s"><span class="pl-pds">'</span>model<span class="pl-pds">'</span></span>);
 
-function &lt;Model Name&gt;() {
+<span class="pl-k">function</span> <span class="pl-k">&lt;</span>Model Name<span class="pl-k">&gt;</span>() {
 
-  var self = this;
-  Model.call(this);
+  <span class="pl-k">var</span> self <span class="pl-k">=</span> <span class="pl-v">this</span>;
+  Model.<span class="pl-c1">call</span>(<span class="pl-v">this</span>);
 
-  self.collectionName = "&lt;String, Required. Collection name in MongoDB&gt;";
+  self.collectionName <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. Collection name in MongoDB&gt;<span class="pl-pds">"</span></span>;
 
-  self.collectionURI = "&lt;String, Required. URL segment to attach in HAL links for collections&gt;";
-  self.documentURI = "&lt;String, Required. URL segment to attach in HAL links for documents&gt;";
+  self.collectionURI <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. URL segment to attach in HAL links for collections&gt;<span class="pl-pds">"</span></span>;
+  self.documentURI <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. URL segment to attach in HAL links for documents&gt;<span class="pl-pds">"</span></span>;
 
-  self.schema = [
+  self.schema <span class="pl-k">=</span> [
     {
-      "key": "&lt;String, Required. Field name in the collection&gt;",
-      "reference": "&lt;String, Optional. If the field is a reference to another collection, define the referenced collection here using its model name.&gt;",
-      "constraints": {
-        &lt;Object, Optional. Data validation definition. Refer to validate.js documentation.&gt;
+      <span class="pl-s"><span class="pl-pds">"</span>key<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. Field name in the collection&gt;<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>reference<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Optional. If the field is a reference to another collection, define the referenced collection here using its model name.&gt;<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>constraints<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-k">&lt;</span><span class="pl-c1">Object</span>, Optional. Data validation definition. Refer to validate.js documentation.<span class="pl-k">&gt;</span>
       },
-      "meta": {
-        "label": "&lt;String, Optional. Label of the field&gt;",
-        "desc": "&lt;String, Optional. Description of the field&gt;"
+      <span class="pl-s"><span class="pl-pds">"</span>meta<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s"><span class="pl-pds">"</span>label<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Optional. Label of the field&gt;<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>desc<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Optional. Description of the field&gt;<span class="pl-pds">"</span></span>
       }
     }
     ...
   ];
 
-  /* Optional */
-  self.embed = {
-    "&lt;Embed Name&gt;": {
-      "model": "&lt;String, Required. Model name of the embeddable collection&gt;",
-      "key": "&lt;String, Required. Local key referencing foreign collection ID&gt;"
+  <span class="pl-c">/* Optional */</span>
+  self.identifier <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Optional. Key name to be used as identifier if the model is using an identifier other than 'id'. A unique index will be automatically created for this key&gt;<span class="pl-pds">"</span></span>;
+
+  <span class="pl-c">/* Optional */</span>
+  self.embed <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>&lt;Embed Name&gt;<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+      <span class="pl-s"><span class="pl-pds">"</span>model<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String or Array, Required. Model name of the embeddable collection&gt;<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>key<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. Local key referencing foreign collection ID&gt;<span class="pl-pds">"</span></span>
     }
     ...
   };
 
-  /* Optional */
-  self.indeces = {
-    &lt;Object, Optional. Indexing information of the collection. Refer to MongoDB documentation.&gt;
+  <span class="pl-c">/* Optional */</span>
+  self.indeces <span class="pl-k">=</span> {
+    <span class="pl-k">&lt;</span><span class="pl-c1">Object</span>, Optional. Indexing information <span class="pl-k">of</span> the collection. Refer to MongoDB documentation.<span class="pl-k">&gt;</span>
   };
 
 }
 
-&lt;Model Name&gt;.prototype = Object.create(Model.prototype);
-&lt;Model Name&gt;prototype.constructor = Model;
+<span class="pl-k">&lt;</span>Model Name<span class="pl-k">&gt;</span>.<span class="pl-c1">prototype</span> <span class="pl-k">=</span> <span class="pl-c1">Object</span>.create(Model.<span class="pl-c1">prototype</span>);
+<span class="pl-k">&lt;</span>Model Name<span class="pl-k">&gt;</span>prototype.<span class="pl-c1">constructor</span> <span class="pl-k">=</span> Model;
 
-module.exports = &lt;Model Name&gt;;
-</code></pre>
+<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> <span class="pl-k">&lt;</span>Model Name<span class="pl-k">&gt;</span>;</pre></div>
 
 <h3>
 <a id="12-loading-models" class="anchor" href="#12-loading-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.2 Loading Models</h3>
 
-<p>The <code>loadModel()</code> helper will return an instance of the model.</p>
+<p>The <code>loadModel(model)</code> helper will return an instance of the model. The model could be either of the following forms:</p>
+
+<ul>
+<li>A string <code>&lt;model_name&gt;</code> which will be load <code>./http/models/&lt;model_name&gt;.js</code>
+</li>
+<li>An array <code>['&lt;package_name&gt;', '&lt;model_name&gt;']</code> which will load <code>./packages/&lt;package_name&gt;/models/&lt;model_name&gt;.js</code>
+</li>
+</ul>
 
 <h3>
 <a id="13-model-methods" class="anchor" href="#13-model-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.3 Model Methods</h3>
@@ -114,15 +123,15 @@ module.exports = &lt;Model Name&gt;;
 <li>
 <strong><code>create(document, callback)</code></strong> - Create a single document in the collection</li>
 <li>
-<strong><code>delete(id, callback)</code></strong> - Remove a single document from the collection</li>
+<strong><code>delete(id, callback)</code></strong> - Remove a single document from the collection by its identifier</li>
 <li>
 <strong><code>find(page, query, callback)</code></strong> - Query a collection in a page based on a query</li>
 <li>
 <strong><code>findOne(query, callback)</code></strong> - Query a collection based on a query, expect one document</li>
 <li>
-<strong><code>id(id, callback)</code></strong> - Retrieve a document from the collection by its id</li>
+<strong><code>id(id, callback)</code></strong> - Retrieve a document from the collection by its identifier</li>
 <li>
-<strong><code>update(document, callback)</code></strong> - Update a single document by its id</li>
+<strong><code>update(id, document, callback)</code></strong> - Update a single document by its identifier</li>
 </ul>
 
 <hr>
@@ -135,61 +144,59 @@ module.exports = &lt;Model Name&gt;;
 <h3>
 <a id="21-defining-routes" class="anchor" href="#21-defining-routes" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Defining Routes</h3>
 
-<pre><code>module.exports = [
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">module</span>.exports <span class="pl-k">=</span> [
   {
-    "route": "&lt;String, Required. Route URL. Refer to Restify documentation&gt;",
-    "method": "&lt;String, Required. HTTP method to use: "get", "post", "put", "delete"&gt;",
+    <span class="pl-s"><span class="pl-pds">"</span>route<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. Route URL. Refer to Restify documentation&gt;<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>method<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. HTTP method to use: <span class="pl-pds">"</span></span>get<span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span>post<span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span>put<span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span><span class="pl-k">delete</span><span class="pl-s"><span class="pl-pds">"</span>&gt;<span class="pl-pds">"</span></span>,
 
-    "response": {
-      "type": "&lt;String, Required. Type of response expected: "collection", "document", "controller"&gt;"
+    <span class="pl-s"><span class="pl-pds">"</span>response<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+      <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. Type of response expected: <span class="pl-pds">"</span></span>collection<span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span><span class="pl-c1">document</span><span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span>controller<span class="pl-s"><span class="pl-pds">"</span>&gt;<span class="pl-pds">"</span></span>
     },
 
-    /* Optional */
-    "request": {
-      "insert": {
-         "&lt;Request parameter name&gt;": "&lt;String, Required. Type of value to be assigned: "auth.user.id"&gt;"
+    <span class="pl-c">/* Optional */</span>
+    <span class="pl-s"><span class="pl-pds">"</span>request<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+      <span class="pl-s"><span class="pl-pds">"</span>insert<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+         <span class="pl-s"><span class="pl-pds">"</span>&lt;Request parameter name&gt;<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Required. Type of value to be assigned: <span class="pl-pds">"</span></span>auth.user.<span class="pl-c1">id</span><span class="pl-s"><span class="pl-pds">"</span>&gt;<span class="pl-pds">"</span></span>
          ...
      } 
     },
 
-    "binding": {
-      "model": "&lt;String, Optional. Model name of which this route is attached. Required when response type is "collection" or "document". Also required when "binding.keys" is present&gt;",
-      "controller": "&lt;String, Optional. Controller name of where the request is to be routed. Required when response type is "controller"&gt;",
-      "action": "&lt;String, Optional. Action name of where the request is to be routed. Required when response type is controller. No need to define action if this is set to "create" or "update"&gt;",
-      "embed": "&lt;String, Optional. Embed a related collection to the model retrieved. The reference is defined by the "embed" property of the model definition&gt;"
-      "keys": [
-        &lt;Array of Strings, Optional. List of keys that the route is expecting&gt;
+    <span class="pl-s"><span class="pl-pds">"</span>binding<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+      <span class="pl-s"><span class="pl-pds">"</span>model<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String or Array, Optional. Model name of which this route is attached. Required when response type is <span class="pl-pds">"</span></span>collection<span class="pl-s"><span class="pl-pds">"</span> or <span class="pl-pds">"</span></span><span class="pl-c1">document</span><span class="pl-s"><span class="pl-pds">"</span>. Also required when <span class="pl-pds">"</span></span>binding.keys<span class="pl-s"><span class="pl-pds">"</span> is present&gt;<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>controller<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String or Array, Optional. Controller name of where the request is to be routed. Required when response type is <span class="pl-pds">"</span></span>controller<span class="pl-s"><span class="pl-pds">"</span>&gt;<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>action<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Optional. Action name of where the request is to be routed. Required when response type is controller. No need to define action if this is set to <span class="pl-pds">"</span></span>create<span class="pl-s"><span class="pl-pds">"</span> or <span class="pl-pds">"</span></span>update<span class="pl-s"><span class="pl-pds">"</span>&gt;<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>embed<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Optional. Embed a related collection to the model retrieved. The reference is defined by the <span class="pl-pds">"</span></span>embed<span class="pl-s"><span class="pl-pds">"</span> property of the model definition&gt;<span class="pl-pds">"</span></span>
+      <span class="pl-s"><span class="pl-pds">"</span>keys<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+        <span class="pl-k">&lt;</span><span class="pl-c1">Array</span> <span class="pl-k">of</span> Strings, Optional. List <span class="pl-k">of</span> keys that the route is expecting<span class="pl-k">&gt;</span>
       ]
     },
 
-    "meta": {
-      "desc": "&lt;String, Optional. Description of the route. Will not be included in reference and browser if not set&gt;",
-      "live": &lt;Boolean, Required. Activate or deactivate a route&gt;,
-      "noauth": &lt;Boolean, Required. When set to false, the route will not require the Authorization credentials. Defaults to true&gt;,
-      "scope": [
-        &lt;Array of Strings, Optional. List of scope names that can access this route. Scope will be determined from the authorization credential&gt;
+    <span class="pl-s"><span class="pl-pds">"</span>meta<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+      <span class="pl-s"><span class="pl-pds">"</span>desc<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;String, Optional. Description of the route. Will not be included in reference and browser if not set&gt;<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>live<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-k">&lt;</span><span class="pl-c1">Boolean</span>, Required. Activate or deactivate a route<span class="pl-k">&gt;</span>,
+      <span class="pl-s"><span class="pl-pds">"</span>noauth<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-k">&lt;</span><span class="pl-c1">Boolean</span>, Required. When set to <span class="pl-c1">false</span>, the route will not <span class="pl-c1">require</span> the Authorization credentials. Defaults to <span class="pl-c1">true</span><span class="pl-k">&gt;</span>,
+      <span class="pl-s"><span class="pl-pds">"</span>scope<span class="pl-pds">"</span></span><span class="pl-k">:</span> [
+        <span class="pl-k">&lt;</span><span class="pl-c1">Array</span> <span class="pl-k">of</span> Strings, Optional. List <span class="pl-k">of</span> scope names that can access <span class="pl-v">this</span> route. Scope will be determined <span class="pl-k">from</span> the authorization credential<span class="pl-k">&gt;</span>
       ]
     }
   }
   ...
-];
-</code></pre>
+];</pre></div>
 
 <h3>
 <a id="22-collection-routing" class="anchor" href="#22-collection-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Collection Routing</h3>
 
 <p>To enable collection routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve documents (a collection) within the bound model.</p>
 
-<pre><code>{
-  'method': 'get',
-  'response': {
-    'type': 'collection'
+<div class="highlight highlight-source-js"><pre>{
+  <span class="pl-s"><span class="pl-pds">'</span>method<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>get<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>response<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>type<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>collection<span class="pl-pds">'</span></span>
   },      
-  'binding': {
-    'model': '&lt;model name&gt;'
+  <span class="pl-s"><span class="pl-pds">'</span>binding<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>model<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;model name&gt;<span class="pl-pds">'</span></span>
   }
-}
-</code></pre>
+}</pre></div>
 
 <h4>
 <a id="221-pagination" class="anchor" href="#221-pagination" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.1. Pagination</h4>
@@ -215,32 +222,30 @@ module.exports = &lt;Model Name&gt;;
 <h3>
 <a id="23-document-routing" class="anchor" href="#23-document-routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 Document Routing</h3>
 
-<p>To enable document routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve a document based on the provided ID (<code>:id</code>). The <code>:id</code> is a required segment of the route.</p>
+<p>To enable document routing, set the following values in the route definition (along with the other properties). The route will automatically retrieve a document based on the provided ID (<code>:id</code>). The <code>:id</code> is a required segment of the route - it will resolve to the key set as <code>identifier</code> in the model if it is set.</p>
 
-<pre><code>{
-  'route': '/&lt;route_name&gt;/:id',
-  'method': 'get',
-  'response': {
-    'type': 'document'
+<div class="highlight highlight-source-js"><pre>{
+  <span class="pl-s"><span class="pl-pds">'</span>route<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/&lt;route_name&gt;/:id<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>method<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>get<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>response<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>type<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>document<span class="pl-pds">'</span></span>
   },      
-  'binding': {
-    'model': '&lt;model name&gt;'
+  <span class="pl-s"><span class="pl-pds">'</span>binding<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>model<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;model name&gt;<span class="pl-pds">'</span></span>
   }
-}
-</code></pre>
+}</pre></div>
 
 <h4>
 <a id="231-embedding-related-collections" class="anchor" href="#231-embedding-related-collections" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3.1. Embedding Related Collections</h4>
 
 <p>To retrieve a document with an embedded related collection (one to many relation), set the following values in the route definition (along with the other properties). The value passed to the <code>binding.embed</code> key should match one of the embed keys defined in the parent model - defined in this route through <code>binding.model</code>.</p>
 
-<pre><code>{    
-  'binding': {
-    'model': '&lt;model name&gt;',
-    'embed': '&lt;embed name&gt;
+<div class="highlight highlight-source-js"><pre>{    
+  <span class="pl-s"><span class="pl-pds">'</span>binding<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>model<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;model name&gt;<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>embed<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;embed name&gt;<span class="pl-pds">'</span></span>
   }
-}
-</code></pre>
+}</pre></div>
 
 <p>Since a collection is also returned through the route, pagination and filters are automatically enabled as well.</p>
 
@@ -252,88 +257,83 @@ module.exports = &lt;Model Name&gt;;
 
 <p>To route a request to a controller, set the following values in the route definition (along with the other properties). The value in the <code>binding.controller</code> property will have <code>./http/controllers</code> as its base path.</p>
 
-<pre><code>{
-  'response': {
-    'type': 'controller',
+<div class="highlight highlight-source-js"><pre>{
+  <span class="pl-s"><span class="pl-pds">'</span>response<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>type<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>controller<span class="pl-pds">'</span></span>,
   },
-  'binding': {
-     'controller': '&lt;path/to/controller&gt;',
-     'action': '&lt;action name&gt;'
+  <span class="pl-s"><span class="pl-pds">'</span>binding<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+     <span class="pl-s"><span class="pl-pds">'</span>controller<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;path/to/controller&gt;<span class="pl-pds">'</span></span>,
+     <span class="pl-s"><span class="pl-pds">'</span>action<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;action name&gt;<span class="pl-pds">'</span></span>
   }
-}
-</code></pre>
+}</pre></div>
 
 <h4>
 <a id="defining-controllers" class="anchor" href="#defining-controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defining Controllers</h4>
 
 <p>Controller definitions are located inside the <code>http/controllers</code> directory and each controller should extend the core controller class (<code>./core/controller.js</code>).</p>
 
-<pre><code>var Controller = extend('controller');
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> Controller <span class="pl-k">=</span> extend(<span class="pl-s"><span class="pl-pds">'</span>controller<span class="pl-pds">'</span></span>);
 
-function &lt;Controller Name&gt;(request, response) {
+<span class="pl-k">function</span> <span class="pl-k">&lt;</span>Controller Name<span class="pl-k">&gt;</span>(request, response) {
 
-    var self = this;
+    <span class="pl-k">var</span> self <span class="pl-k">=</span> <span class="pl-v">this</span>;
 
-    Controller.call(this, request, response); 
+    Controller.<span class="pl-c1">call</span>(<span class="pl-v">this</span>, request, response); 
 
-    self.&lt;action name&gt; = function() {
-      /** Action definition **/
+    self.<span class="pl-k">&lt;</span>action name<span class="pl-k">&gt;</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+      <span class="pl-c">/** Action definition **/</span>
     };
 
     ...
 
 }
 
-&lt;Controller Name&gt;.prototype = Object.create(Controller.prototype);
-&lt;Controller Name&gt;.prototype.constructor = Controller;
+<span class="pl-k">&lt;</span>Controller Name<span class="pl-k">&gt;</span>.<span class="pl-c1">prototype</span> <span class="pl-k">=</span> <span class="pl-c1">Object</span>.create(Controller.<span class="pl-c1">prototype</span>);
+<span class="pl-k">&lt;</span>Controller Name<span class="pl-k">&gt;</span>.<span class="pl-c1">prototype</span>.<span class="pl-c1">constructor</span> <span class="pl-k">=</span> Controller;
 
-module.exports = &lt;Controller Name&gt;;
-</code></pre>
+<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> <span class="pl-k">&lt;</span>Controller Name<span class="pl-k">&gt;</span>;</pre></div>
 
 <h4>
 <a id="241-create-action" class="anchor" href="#241-create-action" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4.1 Create Action</h4>
 
 <p>For routes that insert a document in a collection, a reserved action name of <code>create</code> is available for the controller routing. This will create a document in the bound model after it has been validated using the model's schema constraints. Set the following values in the route definition (along with the other properties) to enable the controller/create action.</p>
 
-<pre><code>{
-  'method': 'post',
-    'binding': {
-      'action': 'create',
-      'model': '&lt;model name&gt;' 
+<div class="highlight highlight-source-js"><pre>{
+  <span class="pl-s"><span class="pl-pds">'</span>method<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>post<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>binding<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+      <span class="pl-s"><span class="pl-pds">'</span>action<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>create<span class="pl-pds">'</span></span>,
+      <span class="pl-s"><span class="pl-pds">'</span>model<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;model name&gt;<span class="pl-pds">'</span></span> 
     }
   }
-}
-</code></pre>
+}</pre></div>
 
 <h4>
 <a id="242-update-action" class="anchor" href="#242-update-action" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4.2 Update Action</h4>
 
-<p>For routes that edit a document in a collection, a reserved action name of <code>update</code> is available for the controller routing. This will update a document from the bound model after it has been validated using the model's schema constraints based on the provided ID (<code>:id</code>). Set the following values in the route definition (along with the other properties) to enable the controller/update action.The <code>:id</code> is a required segment of the route.</p>
+<p>For routes that edit a document in a collection, a reserved action name of <code>update</code> is available for the controller routing. This will update a document from the bound model after it has been validated using the model's schema constraints based on the provided ID (<code>:id</code>). Set the following values in the route definition (along with the other properties) to enable the controller/update action. The <code>:id</code> is a required segment of the route - it will resolve to the key set as <code>identifier</code> in the model if it is set.</p>
 
-<pre><code>{
-  'route': '/&lt;route_name&gt;/:id', 
-  'method': 'put',
-  'binding': {
-    'action': 'update',
-    'model': '&lt;model name&gt;' 
+<div class="highlight highlight-source-js"><pre>{
+  <span class="pl-s"><span class="pl-pds">'</span>route<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/&lt;route_name&gt;/:id<span class="pl-pds">'</span></span>, 
+  <span class="pl-s"><span class="pl-pds">'</span>method<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>put<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>binding<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>action<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>update<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>model<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;model name&gt;<span class="pl-pds">'</span></span> 
   }
-}
-</code></pre>
+}</pre></div>
 
 <h4>
 <a id="243-delete-action" class="anchor" href="#243-delete-action" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4.3 Delete Action</h4>
 
-<p>For routes that remove a document from a collection, a reserved action name of <code>delete</code> is available for the controller routing. This will delete a document from the bound model based on the provided ID (<code>:id</code>) and will cascade to related collections as well. Set the following values in the route definition (along with the other properties) to enable the controller/delete action.The <code>:id</code> is a required segment of the route.</p>
+<p>For routes that remove a document from a collection, a reserved action name of <code>delete</code> is available for the controller routing. This will delete a document from the bound model based on the provided ID (<code>:id</code>) and will cascade to related collections as well. Set the following values in the route definition (along with the other properties) to enable the controller/delete action.The <code>:id</code> is a required segment of the route - it will resolve to the key set as <code>identifier</code> in the model if it is set.</p>
 
-<pre><code>{
-  'route': '/&lt;route_name&gt;/:id', 
-  'method': 'delete',
-  'binding': {
-    'action': 'delete',
-    'model': '&lt;model name&gt;' 
+<div class="highlight highlight-source-js"><pre>{
+  <span class="pl-s"><span class="pl-pds">'</span>route<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/&lt;route_name&gt;/:id<span class="pl-pds">'</span></span>, 
+  <span class="pl-s"><span class="pl-pds">'</span>method<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>delete<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>binding<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>action<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>delete<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>model<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;model name&gt;<span class="pl-pds">'</span></span> 
   }
-}
-</code></pre>
+}</pre></div>
 
 <hr>
 
@@ -379,13 +379,13 @@ node tools/generate resource &lt;resource name&gt; &lt;comma separated list of k
 <li>
 <strong><code>GET /&lt;resources&gt;</code></strong> - to retrieve the collection</li>
 <li>
-<strong><code>GET /&lt;resource&gt;/:id</code></strong> - to retrieve a document</li>
+<strong><code>GET /&lt;resource&gt;/:id</code></strong> - to retrieve a document by its identifier</li>
 <li>
 <strong><code>POST /&lt;resource&gt;</code></strong> - to create a document</li>
 <li>
-<strong><code>PUT /&lt;resource&gt;/:id</code></strong> - to update a document</li>
+<strong><code>PUT /&lt;resource&gt;/:id</code></strong> - to update a document by its identifier</li>
 <li>
-<strong><code>DELETE /&lt;resource&gt;/:id</code></strong> - to delete a document</li>
+<strong><code>DELETE /&lt;resource&gt;/:id</code></strong> - to delete a document by its identifier</li>
 </ul>
 
 <h3>
@@ -407,6 +407,8 @@ node tools/generate controller &lt;controller name&gt; &lt;comma separated list 
 <li>
 <strong><code>getConfig(namespace, key)</code></strong> - Returns a configuration value</li>
 <li>
+<strong><code>getUTCStamp()</code></strong> - Returns the current timestamp in UTC</li>
+<li>
 <strong><code>hash(string)</code></strong> - Returns a hashed form of a string. A key for hashing is set from <code>.env</code> using the <code>SERVER_KEY</code> key</li>
 <li>
 <strong><code>isEmpty(object)</code></strong> - Tests the "emptiness" of a value. Returns <code>true</code> if the value is any of the following: <code>undefined</code>, <code>null</code>, <code>false</code>, <code>0</code>, zero length string or array, objects with no properties </li>
@@ -418,15 +420,6 @@ node tools/generate controller &lt;controller name&gt; &lt;comma separated list 
 
 <h2>
 <a id="8-under-development--known-issues" class="anchor" href="#8-under-development--known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>8. Under Development / Known Issues</h2>
-
-<ul>
-<li>Standardization of error responses for unique validation fails</li>
-<li>Ensure data types for document create/update based on schema definition</li>
-<li>Validation for presence of related collection on document create/update</li>
-<li>Validation for document update</li>
-<li>Cascade of delete</li>
-<li>Implement scopes</li>
-</ul>
 
 <p>A list of things to do can be collected using the <code>todo</code> tool.</p>
 
@@ -446,7 +439,6 @@ node tools/todo
 
 <ul>
 <li>Database abstraction</li>
-<li>Package "namespacing"</li>
 <li>Model, route, and controller modifier tool</li>
 </ul>
 
