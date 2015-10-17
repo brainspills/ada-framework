@@ -50,14 +50,6 @@ module.exports = function Ada() {
 
 		});
 
-		self.server.on('uncaughtException', function(request, response, route, error) {
-
-			console.log(error.stack);
-
-			response.send(error);
-
-		});
-
 	};
 
 	self.serve = function() 

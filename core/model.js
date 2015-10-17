@@ -15,6 +15,8 @@ module.exports = function Model() {
 	 */
 	self.create = function(doc, callback) {
 
+		doc = ensureTypes(doc);
+
 		self.isValidDocument(doc, function(valid, err) {
 
 			if(valid) {
@@ -55,6 +57,8 @@ module.exports = function Model() {
 	 */
 	self.update = function(id, doc, callback) {
 
+		doc = ensureTypes(doc);
+
 		// Resolve identifier
 		var query = {};
 		var identifier = self.identifier;
@@ -82,13 +86,16 @@ module.exports = function Model() {
 
 		//TODO: Model update: Validate payload
 		
+		if(parseInt(getConfig('collection','readonly_identifier')) == 1) {
+			// Remove identifier from the payload - for readonly resource identifier
+			delete payload[identifier];	
+		}
+
 		// Insert updated_at timestamp (UTC)
 		payload.updated_at = getUTCStamp();
-
-		// Remove identifier from the payload - to prevent accidental write of resource identifier
-		delete payload[identifier];
-
+		
 		self.database.collection(self.collectionName).update(query, {$set: payload}, function(err, result) {
+		
 			if(isEmpty(err)) {
 				
 				if(result.result.nModified === 0) {
@@ -103,6 +110,7 @@ module.exports = function Model() {
 			else {
 				callback.call(this, err, err);
 			}
+		
 		});
 
 	};
@@ -249,7 +257,7 @@ module.exports = function Model() {
 
 	};
 
-	self.isValidDocument = function(doc, cb) {
+	self.ensureTypes = function(doc) {
 
 		var constraints = {};
 
@@ -259,7 +267,30 @@ module.exports = function Model() {
 			}
 		}
 
-		//TODO: Model payload validation: Ensure datatypes
+		for(var key in constraints) {
+			
+			var constraint = constraints[key];
+
+			// Ensure integer type
+			if(typeof constraint.onlyInteger !== 'undefined' && constraint.onlyInteger) {
+				doc[key] = parseInt(doc[key]);
+			}
+
+		}
+
+		return doc;
+
+	};
+
+	self.isValidDocument = function(doc, cb) {
+
+		var constraints = {};
+
+		for(var i=0; i<self.schema.length; i++) {			
+			if(!isEmpty(self.schema[i].constraints)) {
+				constraints[self.schema[i].key] = self.schema[i].constraints;
+			}
+		}
 
 		var result = ada.services.validate.test(doc, constraints);
 
