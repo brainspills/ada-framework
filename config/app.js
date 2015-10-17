@@ -4,11 +4,13 @@
  */
 
 // Enable packages here
+
 var packages = [
 	'auth',
-	'mongo',
 	'reference'
 ];
+
+packages.push(process.env.APP_PERSISTENCE);
 
 module.exports = {
 	'key': process.env.APP_KEY,

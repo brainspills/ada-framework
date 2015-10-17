@@ -125,7 +125,7 @@ var Router = {
 		var path = '';
 		paths.push(process.env.PWD+'/http/routes');
 
-		var packages = getConfig('server', 'packages');
+		var packages = getConfig('app', 'packages');
 		for(var i=0; i<packages.length; i++) {
 			var package = packages[i];
 			path = process.env.PWD+'/packages/'+package+'/http/routes';

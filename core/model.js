@@ -8,15 +8,15 @@ module.exports = function Model() {
 	self.identifier = 'id';
 	self.mongo = ada.services.mongo;
 	self.database = self.mongo.db;
-	self.checked = false;
 
 	/*
 	 * Create a single document in the collection
 	 */
 	self.create = function(doc, callback) {
 
-		doc = ensureTypes(doc);
-
+		doc = self.reduceKeys(doc);
+		doc = self.ensureTypes(doc);
+		
 		self.isValidDocument(doc, function(valid, err) {
 
 			if(valid) {
@@ -57,7 +57,8 @@ module.exports = function Model() {
 	 */
 	self.update = function(id, doc, callback) {
 
-		doc = ensureTypes(doc);
+		doc = self.reduceKeys(doc);
+		doc = self.ensureTypes(doc);
 
 		// Resolve identifier
 		var query = {};
@@ -75,43 +76,49 @@ module.exports = function Model() {
 			query[self.identifier] = id;
 		}
 
-		// Cleanup document payload (delete keys not defined in the schema)
-		var payload = {};
-		for(var i=0; i<self.schema.length; i++) {
-			var index = self.schema[i].key;
-			if(!isEmpty(doc[index])) {
-				payload[index] = doc[index];
-			}
-		}
-
-		//TODO: Model update: Validate payload
-		
 		if(parseInt(getConfig('collection','readonly_identifier')) == 1) {
-			// Remove identifier from the payload - for readonly resource identifier
-			delete payload[identifier];	
+			// Remove identifier from the doc - for readonly resource identifier
+			delete doc[identifier];	
 		}
 
-		// Insert updated_at timestamp (UTC)
-		payload.updated_at = getUTCStamp();
-		
-		self.database.collection(self.collectionName).update(query, {$set: payload}, function(err, result) {
-		
-			if(isEmpty(err)) {
-				
-				if(result.result.nModified === 0) {
-					callback.call(this, 
-						new ada.restify.ResourceNotFoundError('Document not found.'), 
-						new ada.restify.ResourceNotFoundError('Document not found.')
-					);
-				}
+		// Validate doc
+		self.isValidDocument(doc, id, function(valid, err) {
 
-				callback.call(this, result, err);
+			if(valid) {
+
+				// Insert updated_at timestamp (UTC)
+				doc.updated_at = getUTCStamp();
+				
+				self.database.collection(self.collectionName).update(query, {$set: doc}, function(err, result) {
+				
+					if(isEmpty(err)) {
+						
+						if(result.result.nModified === 0) {
+							callback.call(this, 
+								new ada.restify.ResourceNotFoundError('Document not found.'), 
+								new ada.restify.ResourceNotFoundError('Document not found.')
+							);
+						}
+
+						callback.call(this, result, err);
+
+					}
+					else {
+						callback.call(this, err, err);
+					}
+				
+				});
+	 			
 			}
 			else {
-				callback.call(this, err, err);
+				
+				callback.call(this, err, err); 
+			
 			}
-		
+
 		});
+
+		
 
 	};
 
@@ -257,38 +264,30 @@ module.exports = function Model() {
 
 	};
 
-	self.ensureTypes = function(doc) {
+	self.isValidDocument = function(doc, ident, cb) {
+
+		var operation = 'update';
+		if(typeof cb === 'undefined') {
+			cb = ident;
+			operation = 'create';
+		}
 
 		var constraints = {};
 
 		for(var i=0; i<self.schema.length; i++) {			
 			if(!isEmpty(self.schema[i].constraints)) {
-				constraints[self.schema[i].key] = self.schema[i].constraints;
-			}
-		}
+				
+				var rules = self.schema[i].constraints;
 
-		for(var key in constraints) {
+				if(operation == 'create') {
+					constraints[self.schema[i].key] = rules;	
+				}
+				if(operation == 'update') {
+					if(typeof doc[self.schema[i].key] !== 'undefined') {
+					 	constraints[self.schema[i].key] = rules;
+					}
+				}
 			
-			var constraint = constraints[key];
-
-			// Ensure integer type
-			if(typeof constraint.onlyInteger !== 'undefined' && constraint.onlyInteger) {
-				doc[key] = parseInt(doc[key]);
-			}
-
-		}
-
-		return doc;
-
-	};
-
-	self.isValidDocument = function(doc, cb) {
-
-		var constraints = {};
-
-		for(var i=0; i<self.schema.length; i++) {			
-			if(!isEmpty(self.schema[i].constraints)) {
-				constraints[self.schema[i].key] = self.schema[i].constraints;
 			}
 		}
 
@@ -313,15 +312,28 @@ module.exports = function Model() {
 					cb.call(this, true, null);	
 				}
 				else {
-					err = new ada.restify.ConflictError('Data validation failed');
-					var details = {};
-					for(i=0; i<keys.length; i++) {
-						if(doc[keys[i]] == document[keys[i]]) {
-							details[keys[i]] = [keys[i] + ' must be unique'];
-						}
+
+					var identifier = (self.identifier == 'id') ? '_id' : self.identifier;
+					
+					if(document[identifier] == ident) {
+
+						cb.call(this, true, null);
+
 					}
-					err.body.details = details;
-					cb.call(this, false, err);
+					else {
+
+						err = new ada.restify.ConflictError('Data validation failed');
+						var details = {};
+						for(i=0; i<keys.length; i++) {
+							if(doc[keys[i]] == document[keys[i]]) {
+								details[keys[i]] = [keys[i] + ' must be unique'];
+							}
+						}
+						err.body.details = details;
+						cb.call(this, false, err);
+
+					}
+
 				}
 								
 			});
@@ -356,6 +368,55 @@ module.exports = function Model() {
 		}
 		
 		return unique;
+
+	};
+
+	self.ensureTypes = function(doc) {
+
+		var constraints = {};
+
+		for(var i=0; i<self.schema.length; i++) {			
+			if(!isEmpty(self.schema[i].constraints)) {
+				constraints[self.schema[i].key] = self.schema[i].constraints;
+			}
+		}
+
+		for(var key in constraints) {
+
+			if(typeof doc[key] !== 'undefined') {
+			
+				var constraint = constraints[key];
+
+				// Ensure integer type
+				if(
+					typeof constraint.numericality !== 'undefined' && 
+				  	typeof constraint.numericality.onlyInteger !== 'undefined' &&
+				  	constraint.numericality.onlyInteger) {
+
+					doc[key] = parseInt(doc[key]);
+				
+				}
+			
+			}
+
+		}
+
+		return doc;
+
+	};
+
+	self.reduceKeys = function(doc) {
+
+		// Cleanup document doc (delete keys not defined in the schema)
+		var payload = {};
+		for(var i=0; i<self.schema.length; i++) {
+			var index = self.schema[i].key;	
+			if(typeof doc[index] !== 'undefined') {
+				payload[index] = doc[index];
+			}
+		}
+
+		return payload;
 
 	};
 

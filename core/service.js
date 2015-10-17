@@ -13,7 +13,7 @@ module.exports = {
 		var path = '';
 		paths.push(process.env.PWD+'/services');
 
-		var packages = getConfig('server', 'packages');
+		var packages = getConfig('app', 'packages');
 		for(var i=0; i<packages.length; i++) {
 			var package = packages[i];
 			path = process.env.PWD+'/packages/'+package+'/services';

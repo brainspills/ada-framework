@@ -50,6 +50,12 @@ module.exports = function Ada() {
 
 		});
 
+		if(parseInt(getConfig('app', 'debug')) == 1) {
+			self.server.on('uncaughtException', function(request, response, route, error) {
+				console.log(error.stack);
+			});
+		}
+
 	};
 
 	self.serve = function() 
