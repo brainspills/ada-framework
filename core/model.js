@@ -264,6 +264,9 @@ module.exports = function Model() {
 
 	};
 
+	/*
+	 * Test if a document has a valid data structure as defined in the schema
+	 */
 	self.isValidDocument = function(doc, ident, cb) {
 
 		var operation = 'update';
@@ -295,6 +298,8 @@ module.exports = function Model() {
 
 		if(isEmpty(result)) {
 		
+			//TODO: Model payload validation: Validate presence of related document in a collection (references)
+
 			// Validate uniqueness (return 409 as error)
 			var keys = self.getUniqueKeys();
 			var query = {$or:[]};
@@ -305,20 +310,19 @@ module.exports = function Model() {
 				query.$or.push(criteria);
 			}
 
-			//TODO: Model payload validation: Validate presence of related document in a collection (references)
-
 			self.database.collection(self.collectionName).findOne(query, function(err, document) {
+				
 				if(isEmpty(document)) {
+					// Document has no record yet
 					cb.call(this, true, null);	
 				}
 				else {
 
 					var identifier = (self.identifier == 'id') ? '_id' : self.identifier;
-					
+
 					if(document[identifier] == ident) {
-
+						// Resource fetched is the same as the document in question
 						cb.call(this, true, null);
-
 					}
 					else {
 
@@ -347,6 +351,9 @@ module.exports = function Model() {
 
 	};
 
+	/*
+	 * Return a list of keys that are indexed as unique
+	 */
 	self.getUniqueKeys = function() {
 
 		var unique = [];
@@ -371,6 +378,9 @@ module.exports = function Model() {
 
 	};
 
+	/*
+	 * Cast data types as defined in the schema
+	 */
 	self.ensureTypes = function(doc) {
 
 		var constraints = {};
@@ -405,9 +415,11 @@ module.exports = function Model() {
 
 	};
 
+	/*
+	 * Delte keys from a document that are not defined in the schema
+	 */
 	self.reduceKeys = function(doc) {
 
-		// Cleanup document doc (delete keys not defined in the schema)
 		var payload = {};
 		for(var i=0; i<self.schema.length; i++) {
 			var index = self.schema[i].key;	
@@ -420,6 +432,9 @@ module.exports = function Model() {
 
 	};
 
+	/*
+	 * Delete keys from a document that is configured to be hidden
+	 */
 	self.removeHidden = function(document) {
 
 		var removeKeys = [];
