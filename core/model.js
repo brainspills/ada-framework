@@ -34,9 +34,11 @@ module.exports = function Model() {
 						doc.id = doc._id;
 						delete doc._id;
 						callback.call(this, self.removeHidden(doc), result, err);
+						return;
 					}
 					else {
 						callback.call(this, null, err, err);
+						return;
 					}
 
 				});
@@ -45,6 +47,7 @@ module.exports = function Model() {
 			else {
 				
 				callback.call(this, err, err); 
+				return;
 			
 			}
 
@@ -70,6 +73,7 @@ module.exports = function Model() {
 			}
 			catch(e) {
 				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+				return;
 			}
 		}
 		else {
@@ -98,13 +102,16 @@ module.exports = function Model() {
 								new ada.restify.ResourceNotFoundError('Document not found.'), 
 								new ada.restify.ResourceNotFoundError('Document not found.')
 							);
+							return;
 						}
 
 						callback.call(this, result, err);
+						return;
 
 					}
 					else {
 						callback.call(this, err, err);
+						return;
 					}
 				
 				});
@@ -113,6 +120,7 @@ module.exports = function Model() {
 			else {
 				
 				callback.call(this, err, err); 
+				return;
 			
 			}
 
@@ -135,6 +143,7 @@ module.exports = function Model() {
 			}
 			catch(e) {
 				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+				return;
 			}
 		}
 		else {
@@ -150,15 +159,18 @@ module.exports = function Model() {
 						new ada.restify.ResourceNotFoundError('Document not found.'), 
 						new ada.restify.ResourceNotFoundError('Document not found.')
 					);
+					return;
 				}
 
 				callback.call(this, result, err);
+				return;
 				
 				//TODO: Model delete: Cascade deletion
 
 			}
 			else {
 				callback.call(this, err, err);
+				return;
 			}
 		
 		});
@@ -204,6 +216,7 @@ module.exports = function Model() {
 			}
 			catch(e) {
 				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+				return;
 			}
 		}
 		else {
@@ -241,6 +254,7 @@ module.exports = function Model() {
 			    }
 			    else {
 			    	callback.call(this, collection, total, getConfig('collection', 'page_size'));
+			    	return;
 			    }
 		    });
 		});
@@ -260,6 +274,7 @@ module.exports = function Model() {
 		}
 		else {
 			callback.call(this, self.removeHidden(document));	
+			return;
 		}
 
 	};
@@ -315,6 +330,7 @@ module.exports = function Model() {
 				if(isEmpty(document)) {
 					// Document has no record yet
 					cb.call(this, true, null);	
+					return;
 				}
 				else {
 
@@ -323,6 +339,7 @@ module.exports = function Model() {
 					if(document[identifier] == ident) {
 						// Resource fetched is the same as the document in question
 						cb.call(this, true, null);
+						return;
 					}
 					else {
 
@@ -335,6 +352,7 @@ module.exports = function Model() {
 						}
 						err.body.details = details;
 						cb.call(this, false, err);
+						return;
 
 					}
 
@@ -347,6 +365,7 @@ module.exports = function Model() {
 			var err = new ada.restify.BadRequestError('Data validation failed');
 			err.body.details = result;
 			cb.call(this, false, err);
+			return;
 		}
 
 	};
