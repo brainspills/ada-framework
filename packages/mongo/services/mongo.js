@@ -14,7 +14,13 @@
 		require('util').log('Mongo: Intializing MongoDB client...');
 
 		Mongo.client = require('mongodb').MongoClient;
-		Mongo.url = 'mongodb://'+getConfig('mongo', 'host')+':'+getConfig('mongo', 'port')+'/'+getConfig('mongo', 'dbname');
+		Mongo.url = 'mongodb://';
+		if(!isEmpty(getConfig('mongo', 'user')) && !isEmpty(getConfig('mongo', 'pass'))) {
+			Mongo.url += getConfig('mongo', 'user')+':'+getConfig('mongo', 'pass')+'@';	
+		}
+		Mongo.url += getConfig('mongo', 'host')+':'+getConfig('mongo', 'port')+'/';
+		Mongo.url += getConfig('mongo', 'dbname');
+		
 		Mongo.ObjectID = require('mongodb').ObjectID;
 		
 		Mongo.client.connect(Mongo.url, function(err, db) {	

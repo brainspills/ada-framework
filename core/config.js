@@ -101,7 +101,7 @@ var Config = {
 			}
 
 			for(var index in template_keys) {
-				if(!current_keys[index]) {
+				if(typeof current_keys[index] === 'undefined') {
 					writeConfig = true;
 					console.log("\n"+index+':');
 					var input = prompt({'value': template_keys[index].trim()});
