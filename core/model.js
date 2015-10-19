@@ -72,7 +72,10 @@ module.exports = function Model() {
 				query = {_id:self.mongo.ObjectID(id)};
 			}
 			catch(e) {
-				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+				callback.call(this, 
+					new ada.restify.ResourceNotFoundError('Document not found.'),
+					new ada.restify.ResourceNotFoundError('Document not found.')
+				);
 				return;
 			}
 		}
@@ -142,7 +145,10 @@ module.exports = function Model() {
 				query = {_id:self.mongo.ObjectID(id)};
 			}
 			catch(e) {
-				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+				callback.call(this, 
+					new ada.restify.ResourceNotFoundError('Document not found.'),
+					new ada.restify.ResourceNotFoundError('Document not found.')
+				);
 				return;
 			}
 		}
@@ -215,7 +221,10 @@ module.exports = function Model() {
 				query = {_id:self.mongo.ObjectID(id)};
 			}
 			catch(e) {
-				callback.call(this, new ada.restify.ResourceNotFoundError('Document not found.'));
+				callback.call(this, 
+					new ada.restify.ResourceNotFoundError('Document not found.'),
+					new ada.restify.ResourceNotFoundError('Document not found.')
+				);
 				return;
 			}
 		}
