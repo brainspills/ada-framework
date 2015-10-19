@@ -16,7 +16,7 @@ module.exports = function Document(request, response, model, embed) {
 	
 	self.model.id(self.request.params.id, function(result, err) {
 
-		if(!isEmpty(result)) {
+		if(isEmpty(err)) {
 
 			var document = result;
 
@@ -62,7 +62,7 @@ module.exports = function Document(request, response, model, embed) {
 		}
 		else {
 
-			self.response.send(result);
+			self.response.send(err);
 
 		}
 
