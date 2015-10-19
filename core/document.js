@@ -14,9 +14,11 @@ module.exports = function Document(request, response, model, embed) {
 
 	//TODO: Support partial keys (fields parameter)
 	
-	self.model.id(self.request.params.id, function(document, err) {
+	self.model.id(self.request.params.id, function(result, err) {
 
-		if(isEmpty(err)) {
+		if(!isEmpty(result)) {
+
+			var document = result;
 
 			if(!isEmpty(self.embed)) {
 				
@@ -60,7 +62,7 @@ module.exports = function Document(request, response, model, embed) {
 		}
 		else {
 
-			self.response.send(err);
+			self.response.send(result);
 
 		}
 

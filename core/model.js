@@ -254,7 +254,7 @@ module.exports = function Model() {
 
 		if(isEmpty(document)) {
 			callback.call(this, 
-				new ada.restify.ResourceNotFoundError('Document not found.'), 
+				null, 
 				new ada.restify.ResourceNotFoundError('Document not found.')
 			);
 		}
