@@ -46,7 +46,6 @@ module.exports = function Model() {
 			}
 			else {
 				
-				callback.call(this, err, err); 
 				return;
 			
 			}
