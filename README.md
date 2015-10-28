@@ -1,5 +1,6 @@
 # Ada Framework Documentation
 
+[![GitHub version](https://badge.fury.io/gh/brainspills%2Fada-framework.svg)](https://badge.fury.io/gh/brainspills%2Fada-framework)
 [![Build Status](https://travis-ci.org/brainspills/ada-framework.svg?branch=master)](https://travis-ci.org/brainspills/ada-framework)
 
 #### **Ada is an open source API development framework written in NodeJS and Restify aimed to help developers build a standard REST API.**
